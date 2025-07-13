@@ -9,6 +9,7 @@ function Quiz({ certificationId, onBackToLanding }) {
   const [isCorrect, setIsCorrect] = useState(false);
   const [score, setScore] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     fetch(`${process.env.PUBLIC_URL}/resource/final-questions.json`)
@@ -19,6 +20,17 @@ function Quiz({ certificationId, onBackToLanding }) {
       .catch(error => {
         console.error('Error loading questions:', error);
       });
+  }, []);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -125,14 +137,25 @@ function Quiz({ certificationId, onBackToLanding }) {
 
   return (
     <div className="app">
-      {/* Back Button - Outside the quiz container */}
-      <div className="back-button-outer">
-        <button className="back-button" onClick={handleBackToLanding}>
-          ← Back to Certifications
-        </button>
-      </div>
+      {/* Back Button - Outside the quiz container (Desktop only) */}
+      {!isMobile && (
+        <div className="back-button-outer">
+          <button className="back-button" onClick={handleBackToLanding}>
+            ← Back to Certifications
+          </button>
+        </div>
+      )}
       
       <div className="quiz-container">
+        {/* Back Button - Inside the quiz container (Mobile only) */}
+        {isMobile && (
+          <div className="back-button-inner">
+            <button className="back-button" onClick={handleBackToLanding}>
+              ← Back to Certifications
+            </button>
+          </div>
+        )}
+
         {/* Header */}
         <div className="quiz-header">
           <div className="progress-info">
@@ -229,4 +252,4 @@ function Quiz({ certificationId, onBackToLanding }) {
   );
 }
 
-export default Quiz; 
+export default Quiz;

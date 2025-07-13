@@ -33,6 +33,13 @@ body {
   z-index: 10;
 }
 
+/* Back button inner container (for mobile) */
+.back-button-inner {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
 /* Quiz container */
 .quiz-container {
   max-width: 800px;
@@ -481,11 +488,6 @@ body {
     padding: 15px;
   }
   
-  .back-button-outer {
-    top: 15px;
-    left: 15px;
-  }
-  
   .quiz-container {
     padding: 20px;
     margin: 0;
@@ -528,11 +530,6 @@ body {
 @media (max-width: 480px) {
   .app {
     padding: 10px;
-  }
-  
-  .back-button-outer {
-    top: 10px;
-    left: 10px;
   }
   
   .quiz-container {
