@@ -17,10 +17,20 @@ body {
 .app {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
   background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+  position: relative;
+}
+
+/* Back button outer container */
+.back-button-outer {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
 }
 
 /* Quiz container */
@@ -118,7 +128,16 @@ body {
   font-weight: bold;
 }
 
-.reset-btn {
+.quiz-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.reset-btn,
+.back-btn {
   background: linear-gradient(135deg, #64ffda, #00d4ff);
   color: #0f0f23;
   border: none;
@@ -131,9 +150,47 @@ body {
   box-shadow: 0 8px 20px rgba(100, 255, 218, 0.3);
 }
 
-.reset-btn:hover {
+.back-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+}
+
+.reset-btn:hover,
+.back-btn:hover {
   transform: translateY(-2px);
+}
+
+.reset-btn:hover {
   box-shadow: 0 12px 30px rgba(100, 255, 218, 0.4);
+}
+
+.back-btn:hover {
+  box-shadow: 0 12px 30px rgba(255, 107, 107, 0.4);
+}
+
+/* Back button styling */
+.back-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: #a0a0a0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Quiz header */
@@ -420,9 +477,18 @@ body {
 
 /* Responsive design */
 @media (max-width: 768px) {
+  .app {
+    padding: 15px;
+  }
+  
+  .back-button-outer {
+    top: 15px;
+    left: 15px;
+  }
+  
   .quiz-container {
     padding: 20px;
-    margin: 10px;
+    margin: 0;
   }
   
   .question-text {
@@ -446,11 +512,27 @@ body {
   .score-info {
     align-self: flex-end;
   }
+  
+  .quiz-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .reset-btn,
+  .back-btn {
+    width: 100%;
+    max-width: 300px;
+  }
 }
 
 @media (max-width: 480px) {
   .app {
     padding: 10px;
+  }
+  
+  .back-button-outer {
+    top: 10px;
+    left: 10px;
   }
   
   .quiz-container {
@@ -468,6 +550,11 @@ body {
   .option-letter {
     width: 35px;
     height: 35px;
+    font-size: 14px;
+  }
+  
+  .back-button {
+    padding: 10px 20px;
     font-size: 14px;
   }
 }
