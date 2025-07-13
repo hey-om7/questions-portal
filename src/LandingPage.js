@@ -67,7 +67,7 @@ function LandingPage({ onStartQuiz }) {
             <div className="logo-icon">☁️</div>
             <h1 className="logo-text">AWS Practice</h1>
           </div>
-          <p className="tagline">Master AWS certifications with interactive practice tests</p>
+          <p className="tagline">Master AWS certifications with interactive practice tests on MockTest</p>
         </div>
 
         {/* Main Content */}
@@ -119,7 +119,7 @@ function LandingPage({ onStartQuiz }) {
 
           {/* Features Section */}
           <div className="features-section">
-            <h3 className="features-title">Why Choose Our Practice Tests?</h3>
+            <h3 className="features-title">Why Choose MockTest?</h3>
             <div className="features-grid">
               <div className="feature-item">
                 <div className="feature-icon">📚</div>
@@ -147,7 +147,7 @@ function LandingPage({ onStartQuiz }) {
 
         {/* Footer */}
         <div className="landing-footer">
-          <p>Ready to ace your AWS certification? Choose a path and start practicing today!</p>
+          <p>Ready to ace your AWS certification? Choose a path and start practicing today with MockTest!</p>
         </div>
       </div>
 
@@ -161,7 +161,7 @@ function LandingPage({ onStartQuiz }) {
             </div>
             <div className="coming-soon-body">
               <h3>{selectedCert?.name} - {selectedCert?.fullName}</h3>
-              <p>We're working hard to bring you practice tests for this certification. Stay tuned for updates!</p>
+              <p>We're working hard to bring you practice tests for this certification. Stay tuned for updates on MockTest!</p>
               <div className="coming-soon-features">
                 <div className="feature-preview">
                   <span className="feature-icon">📝</span>

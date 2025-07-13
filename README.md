@@ -1,16 +1,43 @@
-# AWS Certification Practice Tests
+# MockTest - Free AWS Practice Tests & MCQ Question Bank
 
-A modern, interactive MCQ (Multiple Choice Questions) application designed to help users prepare for AWS certification exams. Built with React and featuring a beautiful dark theme interface.
+A comprehensive, modern MCQ (Multiple Choice Questions) application designed to help users prepare for AWS certification exams. Built with React and featuring a beautiful dark theme interface, MockTest provides free AWS practice tests, mock exams, and detailed question banks for all major AWS certifications.
 
-## ✨ Features
+## 🎯 What is MockTest?
 
-### 🏠 Landing Page
+MockTest is your go-to platform for **AWS practice tests**, **MCQ questions**, and **mock exams**. Whether you're preparing for AWS DVA-C02, SAA-C03, SOA-C02, or CLF-C02, our comprehensive question bank helps you master AWS concepts through interactive practice sessions.
+
+### 🚀 Key Features
+
+- **Free AWS Practice Tests**: No hidden costs or premium features
+- **Comprehensive Question Bank**: Hundreds of carefully curated AWS MCQ questions
+- **Real Exam-Style Questions**: Practice with questions that mirror actual AWS certification exams
+- **Detailed Explanations**: Learn from expert explanations for each question
+- **Progress Tracking**: Monitor your performance and identify weak areas
+- **Unlimited Practice**: Take tests as many times as you need
+- **Mobile-Friendly**: Optimized for all devices and screen sizes
+
+## ✨ Available AWS Certifications
+
+### 🎯 Currently Available
+- **AWS DVA-C02**: AWS Certified Developer - Associate
+  - Practice with comprehensive MCQ questions
+  - Master AWS development concepts
+  - Perfect for developers building AWS applications
+
+### 🔜 Coming Soon
+- **AWS SAA-C03**: AWS Certified Solutions Architect - Associate
+- **AWS SOA-C02**: AWS Certified SysOps Administrator - Associate  
+- **AWS CLF-C02**: AWS Certified Cloud Practitioner
+
+## 🏠 Landing Page Features
+
 - **Modern Dark Theme**: Beautiful gradient backgrounds with glassmorphism effects
 - **Certification Selection**: Choose from various AWS certification paths
-- **Coming Soon Modal**: Informative modal for upcoming certifications
+- **SEO-Optimized Content**: Rich content targeting AWS question banks and practice tests
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
 
-### 🧠 MCQ Quiz Interface
+## 🧠 MCQ Quiz Interface
+
 - **Interactive Questions**: Multiple choice questions with visual feedback
 - **Multiple Selection Support**: Handle both single and multiple correct answers
 - **Real-time Scoring**: Track your progress throughout the quiz
@@ -18,15 +45,11 @@ A modern, interactive MCQ (Multiple Choice Questions) application designed to he
 - **Progress Tracking**: Visual progress bar showing quiz completion
 - **Smooth Navigation**: Auto-scroll to top when moving between questions
 
-### 🎯 Available Certifications
-- **AWS DVA-C02**: AWS Certified Developer - Associate (Available Now)
-- **AWS SAA-C03**: AWS Certified Solutions Architect - Associate (Coming Soon)
-- **AWS SOA-C02**: AWS Certified SysOps Administrator - Associate (Coming Soon)
-- **AWS CLF-C02**: AWS Certified Cloud Practitioner (Coming Soon)
-
 ## 🚀 Live Demo
 
-Visit the live application: [AWS Practice Tests](https://heyom.github.io/aws-questions-mcq)
+Visit the live application: [MockTest - Free AWS Practice Tests](https://yourusername.github.io/aws-questions-mcq/)
+
+**Popular Search Terms**: AWS practice tests, AWS MCQ questions, AWS question bank, AWS dumps, AWS mock test, AWS certification practice, free AWS practice
 
 ## 🛠️ Technology Stack
 
@@ -34,6 +57,7 @@ Visit the live application: [AWS Practice Tests](https://heyom.github.io/aws-que
 - **CSS3**: Custom styling with modern features like backdrop-filter and gradients
 - **JavaScript ES6+**: Modern JavaScript features and async/await
 - **GitHub Pages**: Hosting and deployment
+- **SEO Optimized**: Meta tags, structured data, and semantic HTML
 
 ## 📦 Installation
 
@@ -82,7 +106,7 @@ Visit the live application: [AWS Practice Tests](https://heyom.github.io/aws-que
    - Save the settings
 
 4. **Access your deployed site**
-   Your application will be available at: `https://heyom.github.io/aws-questions-mcq`
+   Your application will be available at: `https://yourusername.github.io/aws-questions-mcq/`
 
 ## 📁 Project Structure
 
@@ -90,13 +114,15 @@ Visit the live application: [AWS Practice Tests](https://heyom.github.io/aws-que
 aws-questions-mcq/
 ├── public/
 │   ├── resource/
-│   │   └── final-questions.json    # Question bank
-│   ├── index.html
+│   │   └── final-questions.json    # AWS question bank
+│   ├── sitemap.xml                 # SEO sitemap
+│   ├── robots.txt                  # SEO robots file
+│   ├── index.html                  # SEO optimized HTML
 │   └── ...
 ├── src/
 │   ├── App.js                      # Main application component
 │   ├── App.css                     # Main application styles
-│   ├── LandingPage.js              # Landing page component
+│   ├── LandingPage.js              # SEO rich landing page
 │   ├── LandingPage.css             # Landing page styles
 │   ├── Quiz.js                     # Quiz component
 │   ├── index.js                    # Application entry point
@@ -134,7 +160,7 @@ The application is fully responsive and optimized for:
 2. Follow the existing format:
    ```json
    {
-     "question": "Your question here?",
+     "question": "Your AWS question here?",
      "options": ["Option A", "Option B", "Option C", "Option D"],
      "answer": [1, 2]  // 1-based indexing for correct answers
    }
@@ -144,6 +170,33 @@ The application is fully responsive and optimized for:
 1. Update the `certifications` array in `src/LandingPage.js`
 2. Set `available: true` for ready certifications
 3. Add corresponding question files if needed
+
+## 🔍 SEO Features
+
+MockTest is fully optimized for search engines with:
+
+- **Comprehensive Meta Tags**: Title, description, keywords targeting AWS practice tests
+- **Open Graph Tags**: Rich social media sharing
+- **Structured Data**: JSON-LD schema markup for better search results
+- **Semantic HTML**: Proper heading hierarchy and content structure
+- **Sitemap.xml**: Helps search engines discover all pages
+- **Robots.txt**: Guides search engine crawlers
+- **Rich Content**: SEO-optimized content targeting relevant keywords
+
+### Target Keywords
+- AWS practice tests
+- AWS MCQ questions
+- AWS question bank
+- AWS dumps
+- AWS mock test
+- AWS certification practice
+- AWS DVA-C02 practice
+- AWS SAA-C03 practice
+- AWS SOA-C02 practice
+- AWS CLF-C02 practice
+- Free AWS practice
+- AWS exam preparation
+- AWS certification study
 
 ## 🤝 Contributing
 
@@ -167,6 +220,16 @@ This project is open source and available under the [MIT License](LICENSE).
 
 If you have any questions or need support, please open an issue on GitHub or contact the maintainers.
 
+## 🔗 Related Resources
+
+- [AWS Official Certification Page](https://aws.amazon.com/certification/)
+- [AWS DVA-C02 Exam Guide](https://aws.amazon.com/certification/certified-developer-associate/)
+- [AWS SAA-C03 Exam Guide](https://aws.amazon.com/certification/certified-solutions-architect-associate/)
+- [AWS SOA-C02 Exam Guide](https://aws.amazon.com/certification/certified-sysops-administrator-associate/)
+- [AWS CLF-C02 Exam Guide](https://aws.amazon.com/certification/certified-cloud-practitioner/)
+
 ---
 
-**Happy Learning! 🚀**
+**Start your AWS certification journey with MockTest - Your trusted partner for AWS practice tests, MCQ questions, and mock exams! 🚀**
+
+*Keywords: AWS practice tests, AWS MCQ questions, AWS question bank, AWS dumps, AWS mock test, AWS certification practice, free AWS practice*

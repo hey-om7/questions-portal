@@ -1,4 +1,4 @@
-# 🚀 GitHub Pages Deployment Guide
+# 🚀 MockTest GitHub Pages Deployment Guide
 
 ## Quick Deployment Steps
 
@@ -15,11 +15,11 @@ npm run deploy
 5. Click **Save**
 
 ### 3. Access Your Site
-Your application will be available at: `https://heyom.github.io/aws-questions-mcq`
+Your application will be available at: `https://mocktest.fun`
 
 ## What's Already Configured
 
-✅ **package.json** - Added homepage and deployment scripts
+✅ **package.json** - Added homepage and deployment scripts for MockTest
 ✅ **gh-pages** - Installed as dev dependency
 ✅ **Quiz.js** - Updated fetch path for GitHub Pages
 ✅ **README.md** - Comprehensive documentation
@@ -48,8 +48,8 @@ public/
 
 1. **Test the live site** - Make sure everything works
 2. **Update README** - Add the live demo link
-3. **Share the link** - Let others know about your AWS practice tests!
+3. **Share the link** - Let others know about MockTest!
 
 ---
 
-**Happy Deploying! 🎉** 
+**Happy Deploying with MockTest! 🎉** 
