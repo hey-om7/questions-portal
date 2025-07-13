@@ -1,70 +1,172 @@
-# Getting Started with Create React App
+# AWS Certification Practice Tests
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, interactive MCQ (Multiple Choice Questions) application designed to help users prepare for AWS certification exams. Built with React and featuring a beautiful dark theme interface.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+### 🏠 Landing Page
+- **Modern Dark Theme**: Beautiful gradient backgrounds with glassmorphism effects
+- **Certification Selection**: Choose from various AWS certification paths
+- **Coming Soon Modal**: Informative modal for upcoming certifications
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
 
-### `npm start`
+### 🧠 MCQ Quiz Interface
+- **Interactive Questions**: Multiple choice questions with visual feedback
+- **Multiple Selection Support**: Handle both single and multiple correct answers
+- **Real-time Scoring**: Track your progress throughout the quiz
+- **Immediate Feedback**: See correct/incorrect answers instantly
+- **Progress Tracking**: Visual progress bar showing quiz completion
+- **Smooth Navigation**: Auto-scroll to top when moving between questions
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🎯 Available Certifications
+- **AWS DVA-C02**: AWS Certified Developer - Associate (Available Now)
+- **AWS SAA-C03**: AWS Certified Solutions Architect - Associate (Coming Soon)
+- **AWS SOA-C02**: AWS Certified SysOps Administrator - Associate (Coming Soon)
+- **AWS CLF-C02**: AWS Certified Cloud Practitioner (Coming Soon)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🚀 Live Demo
 
-### `npm test`
+Visit the live application: [AWS Practice Tests](https://heyom.github.io/aws-questions-mcq)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Technology Stack
 
-### `npm run build`
+- **React 19.1.0**: Modern React with hooks and functional components
+- **CSS3**: Custom styling with modern features like backdrop-filter and gradients
+- **JavaScript ES6+**: Modern JavaScript features and async/await
+- **GitHub Pages**: Hosting and deployment
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📦 Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/heyom/aws-questions-mcq.git
+   cd aws-questions-mcq
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### `npm run eject`
+3. **Start the development server**
+   ```bash
+   npm start
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. **Open your browser**
+   Navigate to `http://localhost:3000` to view the application
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🚀 Deployment to GitHub Pages
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Prerequisites
+- A GitHub account
+- The repository pushed to GitHub
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Deployment Steps
 
-## Learn More
+1. **Install gh-pages package** (already added to package.json)
+   ```bash
+   npm install --save-dev gh-pages
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+2. **Deploy to GitHub Pages**
+   ```bash
+   npm run deploy
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. **Configure GitHub Pages**
+   - Go to your repository on GitHub
+   - Navigate to Settings → Pages
+   - Set Source to "Deploy from a branch"
+   - Select "gh-pages" branch
+   - Save the settings
 
-### Code Splitting
+4. **Access your deployed site**
+   Your application will be available at: `https://heyom.github.io/aws-questions-mcq`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 📁 Project Structure
 
-### Analyzing the Bundle Size
+```
+aws-questions-mcq/
+├── public/
+│   ├── resource/
+│   │   └── final-questions.json    # Question bank
+│   ├── index.html
+│   └── ...
+├── src/
+│   ├── App.js                      # Main application component
+│   ├── App.css                     # Main application styles
+│   ├── LandingPage.js              # Landing page component
+│   ├── LandingPage.css             # Landing page styles
+│   ├── Quiz.js                     # Quiz component
+│   ├── index.js                    # Application entry point
+│   └── index.css                   # Global styles
+├── package.json
+└── README.md
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🎨 Design Features
 
-### Making a Progressive Web App
+### Dark Theme Aesthetic
+- Deep gradient backgrounds (#0f0f23 to #16213e)
+- Glassmorphism effects with backdrop blur
+- Accent colors: #64ffda (teal) and #00d4ff (blue)
+- Smooth animations and transitions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Interactive Elements
+- Hover effects on certification cards
+- Glowing borders and shadows
+- Animated progress bars
+- Pulse animations for results
+- Floating logo animation
 
-### Advanced Configuration
+## 📱 Responsive Design
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+The application is fully responsive and optimized for:
+- **Desktop**: Full-featured experience with hover effects
+- **Tablet**: Adapted layout with touch-friendly interactions
+- **Mobile**: Optimized for small screens with simplified navigation
 
-### Deployment
+## 🔧 Customization
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Adding New Questions
+1. Edit `public/resource/final-questions.json`
+2. Follow the existing format:
+   ```json
+   {
+     "question": "Your question here?",
+     "options": ["Option A", "Option B", "Option C", "Option D"],
+     "answer": [1, 2]  // 1-based indexing for correct answers
+   }
+   ```
 
-### `npm run build` fails to minify
+### Adding New Certifications
+1. Update the `certifications` array in `src/LandingPage.js`
+2. Set `available: true` for ready certifications
+3. Add corresponding question files if needed
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- AWS for providing the certification framework
+- React team for the amazing framework
+- GitHub for hosting and deployment services
+
+## 📞 Support
+
+If you have any questions or need support, please open an issue on GitHub or contact the maintainers.
+
+---
+
+**Happy Learning! 🚀**

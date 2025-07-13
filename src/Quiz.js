@@ -11,7 +11,7 @@ function Quiz({ certificationId, onBackToLanding }) {
   const [totalAnswered, setTotalAnswered] = useState(0);
 
   useEffect(() => {
-    fetch('/resource/final-questions.json')
+    fetch(`${process.env.PUBLIC_URL}/resource/final-questions.json`)
       .then(response => response.json())
       .then(data => {
         setQuestions(data);
