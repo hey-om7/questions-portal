@@ -34,22 +34,23 @@
   animation: fadeInDown 0.8s ease-out;
 }
 
+/* Logo Section Adjustments */
 .logo-section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 18px;
   margin-bottom: 20px;
 }
 
 .logo-icon {
-  font-size: 3rem;
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  height: 48px;
+  width: 48px;
+  object-fit: contain;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  background: rgba(255,255,255,0.08);
 }
 
 .logo-text {
@@ -60,6 +61,17 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .logo-icon {
+    height: 36px;
+    width: 36px;
+  }
+  .logo-text {
+    font-size: 2rem;
+  }
 }
 
 .tagline {
@@ -103,6 +115,19 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
   margin-bottom: 80px;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .certifications-grid {
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 .certification-card {
@@ -232,6 +257,36 @@
 
 .certification-card:hover:not(.coming-soon) .arrow-icon {
   transform: translateX(5px);
+}
+
+/* External Link Button Top Right */
+.external-link-btn.top-right {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(255,255,255,0.12);
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--accent-color);
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.external-link-btn.top-right:hover {
+  background: var(--accent-color);
+  color: #0f0f23;
+}
+
+/* Remove old .external-link-btn from .card-footer if present */
+.certification-card .external-link-btn:not(.top-right) {
+  display: none;
 }
 
 /* Coming Soon Overlay */
@@ -438,6 +493,31 @@
   font-size: 1.1rem;
   color: #a0a0a0;
   margin: 0;
+}
+
+/* Search Bar Styles */
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 35px;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 1.05rem;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.search-bar:focus {
+  border: 1.5px solid #64ffda;
+  background: rgba(255,255,255,0.13);
 }
 
 /* Animations */
