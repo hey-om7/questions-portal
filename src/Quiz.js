@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+function shuffleArrayWithMapping(array) {
+  const arr = array.map((item, idx) => ({ item, originalIndex: idx }));
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 function Quiz({ certificationId, onBackToLanding }) {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -10,6 +19,8 @@ function Quiz({ certificationId, onBackToLanding }) {
   const [score, setScore] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [shuffledOptions, setShuffledOptions] = useState([]);
+  const [optionIndexMap, setOptionIndexMap] = useState([]); // Maps shuffled index to original index
 
   useEffect(() => {
     fetch(`${process.env.PUBLIC_URL}/resource/final-questions.json`)
@@ -33,6 +44,17 @@ function Quiz({ certificationId, onBackToLanding }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Shuffle options whenever the question changes
+  useEffect(() => {
+    if (questions.length > 0 && currentQuestionIndex < questions.length) {
+      const currentQ = questions[currentQuestionIndex];
+      const shuffled = shuffleArrayWithMapping(currentQ.options);
+      setShuffledOptions(shuffled.map(obj => obj.item));
+      setOptionIndexMap(shuffled.map(obj => obj.originalIndex));
+      setSelectedOptions([]); // Reset selected options on question change
+    }
+  }, [questions, currentQuestionIndex]);
+
   const currentQuestion = questions[currentQuestionIndex];
 
   const handleOptionSelect = (optionIndex) => {
@@ -50,14 +72,14 @@ function Quiz({ certificationId, onBackToLanding }) {
 
   const handleSubmit = () => {
     if (selectedOptions.length === 0) return;
-    
+    // Map selected shuffled indices to original indices
+    const selectedOriginalIndices = selectedOptions.map(idx => optionIndexMap[idx]);
     const correctAnswers = currentQuestion.answer.map(ans => ans - 1); // Convert to 0-based index
-    const isAnswerCorrect = selectedOptions.length === correctAnswers.length &&
-      selectedOptions.every(option => correctAnswers.includes(option));
-    
+    const isAnswerCorrect =
+      selectedOriginalIndices.length === correctAnswers.length &&
+      selectedOriginalIndices.every(option => correctAnswers.includes(option));
     setIsCorrect(isAnswerCorrect);
     setShowResult(true);
-    
     if (isAnswerCorrect) {
       setScore(prev => prev + 1);
     }
@@ -181,14 +203,14 @@ function Quiz({ certificationId, onBackToLanding }) {
 
         {/* Options */}
         <div className="options-section">
-          {currentQuestion.options.map((option, index) => (
+          {shuffledOptions.map((option, index) => (
             <button
               key={index}
               className={`option-btn ${
                 selectedOptions.includes(index) ? 'selected' : ''
               } ${
                 showResult 
-                  ? currentQuestion.answer.includes(index + 1) 
+                  ? currentQuestion.answer.includes(optionIndexMap[index] + 1) 
                     ? 'correct' 
                     : selectedOptions.includes(index) 
                       ? 'incorrect' 
@@ -202,10 +224,10 @@ function Quiz({ certificationId, onBackToLanding }) {
                 {String.fromCharCode(65 + index)}
               </span>
               <span className="option-text">{option}</span>
-              {showResult && currentQuestion.answer.includes(index + 1) && (
+              {showResult && currentQuestion.answer.includes(optionIndexMap[index] + 1) && (
                 <span className="correct-indicator">✓</span>
               )}
-              {showResult && selectedOptions.includes(index) && !currentQuestion.answer.includes(index + 1) && (
+              {showResult && selectedOptions.includes(index) && !currentQuestion.answer.includes(optionIndexMap[index] + 1) && (
                 <span className="incorrect-indicator">✗</span>
               )}
             </button>
@@ -239,11 +261,15 @@ function Quiz({ certificationId, onBackToLanding }) {
           <div className="result-details">
             <h3>Correct Answer{currentQuestion.answer.length > 1 ? 's' : ''}:</h3>
             <div className="correct-answers">
-              {currentQuestion.answer.map((ans, index) => (
-                <span key={index} className="correct-answer">
-                  {String.fromCharCode(64 + ans)}
-                </span>
-              ))}
+              {currentQuestion.answer.map((ans, index) => {
+                // Find the shuffled index for each correct answer
+                const shuffledIdx = optionIndexMap.findIndex(origIdx => origIdx === ans - 1);
+                return (
+                  <span key={index} className="correct-answer">
+                    {String.fromCharCode(65 + shuffledIdx)}
+                  </span>
+                );
+              })}
             </div>
           </div>
         )}
