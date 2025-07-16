@@ -11,17 +11,21 @@ function shuffleArrayWithMapping(array) {
 }
 
 function Quiz({ certificationId, onBackToLanding }) {
+  // LocalStorage key (namespace by certificationId if present)
+  const storageKey = certificationId ? `quizState_${certificationId}` : 'quizState';
+
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const [showResult, setShowResult] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState([]); // Array of arrays, one per question
+  const [showResult, setShowResult] = useState([]); // Array of booleans, one per question
   const [isCorrect, setIsCorrect] = useState(false);
   const [score, setScore] = useState(0);
   const [totalAnswered, setTotalAnswered] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const [shuffledOptions, setShuffledOptions] = useState([]);
-  const [optionIndexMap, setOptionIndexMap] = useState([]); // Maps shuffled index to original index
+  const [shuffledOptions, setShuffledOptions] = useState([]); // Array of arrays, one per question
+  const [optionIndexMap, setOptionIndexMap] = useState([]); // Array of arrays, one per question
 
+  // Restore state from localStorage on mount (after questions are loaded)
   useEffect(() => {
     fetch(`${process.env.PUBLIC_URL}/resource/final-questions.json`)
       .then(response => response.json())
@@ -33,53 +37,136 @@ function Quiz({ certificationId, onBackToLanding }) {
       });
   }, []);
 
+  // Restore quiz state from localStorage after questions are loaded, or shuffle if not present
+  useEffect(() => {
+    if (questions.length === 0) return;
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setCurrentQuestionIndex(parsed.currentQuestionIndex || 0);
+        setSelectedOptions(parsed.selectedOptions || Array(questions.length).fill([]));
+        setShowResult(parsed.showResult || Array(questions.length).fill(false));
+        if (Array.isArray(parsed.optionIndexMap) && parsed.optionIndexMap.length === questions.length && Array.isArray(parsed.shuffledOptions) && parsed.shuffledOptions.length === questions.length) {
+          setOptionIndexMap(parsed.optionIndexMap);
+          setShuffledOptions(parsed.shuffledOptions);
+        } else {
+          // If not valid, shuffle
+          const newShuffledOptions = [];
+          const newOptionIndexMap = [];
+          for (let i = 0; i < questions.length; i++) {
+            const shuffled = shuffleArrayWithMapping(questions[i].options);
+            newShuffledOptions.push(shuffled.map(obj => obj.item));
+            newOptionIndexMap.push(shuffled.map(obj => obj.originalIndex));
+          }
+          setShuffledOptions(newShuffledOptions);
+          setOptionIndexMap(newOptionIndexMap);
+        }
+      } catch (e) {
+        setSelectedOptions(Array(questions.length).fill([]));
+        setShowResult(Array(questions.length).fill(false));
+        const newShuffledOptions = [];
+        const newOptionIndexMap = [];
+        for (let i = 0; i < questions.length; i++) {
+          const shuffled = shuffleArrayWithMapping(questions[i].options);
+          newShuffledOptions.push(shuffled.map(obj => obj.item));
+          newOptionIndexMap.push(shuffled.map(obj => obj.originalIndex));
+        }
+        setShuffledOptions(newShuffledOptions);
+        setOptionIndexMap(newOptionIndexMap);
+      }
+    } else {
+      setSelectedOptions(Array(questions.length).fill([]));
+      setShowResult(Array(questions.length).fill(false));
+      const newShuffledOptions = [];
+      const newOptionIndexMap = [];
+      for (let i = 0; i < questions.length; i++) {
+        const shuffled = shuffleArrayWithMapping(questions[i].options);
+        newShuffledOptions.push(shuffled.map(obj => obj.item));
+        newOptionIndexMap.push(shuffled.map(obj => obj.originalIndex));
+      }
+      setShuffledOptions(newShuffledOptions);
+      setOptionIndexMap(newOptionIndexMap);
+    }
+  }, [questions]);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Shuffle options whenever the question changes
-  useEffect(() => {
-    if (questions.length > 0 && currentQuestionIndex < questions.length) {
-      const currentQ = questions[currentQuestionIndex];
-      const shuffled = shuffleArrayWithMapping(currentQ.options);
-      setShuffledOptions(shuffled.map(obj => obj.item));
-      setOptionIndexMap(shuffled.map(obj => obj.originalIndex));
-      setSelectedOptions([]); // Reset selected options on question change
+  // Helper to get current question's shuffled options and index map
+  const getCurrentShuffledOptions = () => {
+    if (shuffledOptions.length === questions.length) {
+      return shuffledOptions[currentQuestionIndex] || [];
     }
-  }, [questions, currentQuestionIndex]);
+    return [];
+  };
+  const getCurrentOptionIndexMap = () => {
+    if (optionIndexMap.length === questions.length) {
+      return optionIndexMap[currentQuestionIndex] || [];
+    }
+    return [];
+  };
 
   const currentQuestion = questions[currentQuestionIndex];
+  const currentShuffledOptions = getCurrentShuffledOptions();
+  const currentOptionIndexMap = getCurrentOptionIndexMap();
+  const currentSelectedOptions = selectedOptions[currentQuestionIndex] || [];
+  const currentShowResult = showResult[currentQuestionIndex] || false;
+
+  // Only save to localStorage after a question is submitted
+  const saveProgress = (nextQuestionIndex, nextSelectedOptions, nextShowResult, nextOptionIndexMap, nextShuffledOptions) => {
+    const stateToSave = {
+      currentQuestionIndex: nextQuestionIndex,
+      selectedOptions: nextSelectedOptions,
+      showResult: nextShowResult,
+      optionIndexMap: nextOptionIndexMap,
+      shuffledOptions: nextShuffledOptions,
+    };
+    localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+  };
 
   const handleOptionSelect = (optionIndex) => {
-    if (showResult) return; // Prevent selection after submission
-    
+    if (currentShowResult) return; // Prevent selection after submission
     setSelectedOptions(prev => {
-      const isSelected = prev.includes(optionIndex);
+      const updated = [...prev];
+      const isSelected = (updated[currentQuestionIndex] || []).includes(optionIndex);
+      if (!updated[currentQuestionIndex]) updated[currentQuestionIndex] = [];
       if (isSelected) {
-        return prev.filter(index => index !== optionIndex);
+        updated[currentQuestionIndex] = updated[currentQuestionIndex].filter(index => index !== optionIndex);
       } else {
-        return [...prev, optionIndex];
+        updated[currentQuestionIndex] = [...updated[currentQuestionIndex], optionIndex];
       }
+      return updated;
     });
   };
 
   const handleSubmit = () => {
-    if (selectedOptions.length === 0) return;
-    // Map selected shuffled indices to original indices
-    const selectedOriginalIndices = selectedOptions.map(idx => optionIndexMap[idx]);
+    if ((currentSelectedOptions || []).length === 0) return;
+    const selectedOriginalIndices = (currentSelectedOptions || []).map(idx => currentOptionIndexMap[idx]);
     const correctAnswers = currentQuestion.answer.map(ans => ans - 1); // Convert to 0-based index
     const isAnswerCorrect =
       selectedOriginalIndices.length === correctAnswers.length &&
       selectedOriginalIndices.every(option => correctAnswers.includes(option));
     setIsCorrect(isAnswerCorrect);
-    setShowResult(true);
+    setShowResult(prev => {
+      const updated = [...prev];
+      updated[currentQuestionIndex] = true;
+      // Save progress after submitting
+      saveProgress(
+        currentQuestionIndex,
+        selectedOptions.map((opts, idx) => idx === currentQuestionIndex ? currentSelectedOptions : opts),
+        updated,
+        optionIndexMap,
+        shuffledOptions
+      );
+      return updated;
+    });
     if (isAnswerCorrect) {
       setScore(prev => prev + 1);
     }
@@ -87,11 +174,8 @@ function Quiz({ certificationId, onBackToLanding }) {
   };
 
   const handleNext = () => {
-    setSelectedOptions([]);
-    setShowResult(false);
     setIsCorrect(false);
     setCurrentQuestionIndex(prev => prev + 1);
-    
     // Scroll to top when moving to next question
     window.scrollTo({
       top: 0,
@@ -101,12 +185,23 @@ function Quiz({ certificationId, onBackToLanding }) {
 
   const handleReset = () => {
     setCurrentQuestionIndex(0);
-    setSelectedOptions([]);
-    setShowResult(false);
+    setSelectedOptions(Array(questions.length).fill([]));
+    setShowResult(Array(questions.length).fill(false));
     setIsCorrect(false);
     setScore(0);
     setTotalAnswered(0);
-    
+    // Re-shuffle all options
+    const newShuffledOptions = [];
+    const newOptionIndexMap = [];
+    for (let i = 0; i < questions.length; i++) {
+      const shuffled = shuffleArrayWithMapping(questions[i].options);
+      newShuffledOptions.push(shuffled.map(obj => obj.item));
+      newOptionIndexMap.push(shuffled.map(obj => obj.originalIndex));
+    }
+    setShuffledOptions(newShuffledOptions);
+    setOptionIndexMap(newOptionIndexMap);
+    // Clear localStorage
+    localStorage.removeItem(storageKey);
     // Scroll to top when resetting quiz
     window.scrollTo({
       top: 0,
@@ -115,6 +210,7 @@ function Quiz({ certificationId, onBackToLanding }) {
   };
 
   const handleBackToLanding = () => {
+    localStorage.removeItem(storageKey);
     onBackToLanding();
   };
 
@@ -130,6 +226,8 @@ function Quiz({ certificationId, onBackToLanding }) {
   }
 
   if (currentQuestionIndex >= questions.length) {
+    // Quiz complete, clear localStorage
+    localStorage.removeItem(storageKey);
     return (
       <div className="app">
         <div className="quiz-complete">
@@ -203,31 +301,31 @@ function Quiz({ certificationId, onBackToLanding }) {
 
         {/* Options */}
         <div className="options-section">
-          {shuffledOptions.map((option, index) => (
+          {currentShuffledOptions.map((option, index) => (
             <button
               key={index}
               className={`option-btn ${
-                selectedOptions.includes(index) ? 'selected' : ''
+                (currentSelectedOptions || []).includes(index) ? 'selected' : ''
               } ${
-                showResult 
-                  ? currentQuestion.answer.includes(optionIndexMap[index] + 1) 
+                currentShowResult 
+                  ? currentQuestion.answer.includes(currentOptionIndexMap[index] + 1) 
                     ? 'correct' 
-                    : selectedOptions.includes(index) 
+                    : (currentSelectedOptions || []).includes(index) 
                       ? 'incorrect' 
                       : ''
                   : ''
               }`}
               onClick={() => handleOptionSelect(index)}
-              disabled={showResult}
+              disabled={currentShowResult}
             >
               <span className="option-letter">
                 {String.fromCharCode(65 + index)}
               </span>
               <span className="option-text">{option}</span>
-              {showResult && currentQuestion.answer.includes(optionIndexMap[index] + 1) && (
+              {currentShowResult && currentQuestion.answer.includes(currentOptionIndexMap[index] + 1) && (
                 <span className="correct-indicator">✓</span>
               )}
-              {showResult && selectedOptions.includes(index) && !currentQuestion.answer.includes(optionIndexMap[index] + 1) && (
+              {currentShowResult && (currentSelectedOptions || []).includes(index) && !currentQuestion.answer.includes(currentOptionIndexMap[index] + 1) && (
                 <span className="incorrect-indicator">✗</span>
               )}
             </button>
@@ -236,11 +334,11 @@ function Quiz({ certificationId, onBackToLanding }) {
 
         {/* Submit/Next Button */}
         <div className="button-section">
-          {!showResult ? (
+          {!currentShowResult ? (
             <button 
               className="submit-btn" 
               onClick={handleSubmit}
-              disabled={selectedOptions.length === 0}
+              disabled={(currentSelectedOptions || []).length === 0}
             >
               Submit Answer
             </button>
@@ -257,13 +355,13 @@ function Quiz({ certificationId, onBackToLanding }) {
         </div>
 
         {/* Result Details */}
-        {showResult && (
+        {currentShowResult && (
           <div className="result-details">
             <h3>Correct Answer{currentQuestion.answer.length > 1 ? 's' : ''}:</h3>
             <div className="correct-answers">
               {currentQuestion.answer.map((ans, index) => {
                 // Find the shuffled index for each correct answer
-                const shuffledIdx = optionIndexMap.findIndex(origIdx => origIdx === ans - 1);
+                const shuffledIdx = currentOptionIndexMap.findIndex(origIdx => origIdx === ans - 1);
                 return (
                   <span key={index} className="correct-answer">
                     {String.fromCharCode(65 + shuffledIdx)}
