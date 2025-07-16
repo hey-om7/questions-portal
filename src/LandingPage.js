@@ -60,6 +60,8 @@ function LandingPage({ onStartQuiz }) {
 
   const handleCertificationClick = (cert) => {
     if (cert.available) {
+      // Clear quiz cache for this certification before starting
+      localStorage.removeItem('quizState_' + cert.id);
       onStartQuiz(cert.id);
     } else {
       setSelectedCert(cert);
