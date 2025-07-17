@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './LandingPage.css';
 
-function LandingPage({ onStartQuiz }) {
+function LandingPage({ onStartQuiz , onStartQuizWithFilepath}) {
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [selectedCert, setSelectedCert] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -12,72 +12,73 @@ function LandingPage({ onStartQuiz }) {
       id: 'dva-c02',
       name: 'AWS DVA-C02',
       fullName: 'AWS Certified Developer - Associate',
-      // description: 'Validate your expertise in developing and maintaining applications on the AWS platform.',
       icon: '🚀',
       color: '#64ffda',
       available: true,
-      external: 'https://github.com/Ditectrev/Amazon-Web-Services-AWS-Developer-Associate-DVA-C02-Practice-Tests-Exams-Questions-Answers/blob/main/README.md'
+      external: 'https://github.com/Ditectrev/Amazon-Web-Services-AWS-Developer-Associate-DVA-C02-Practice-Tests-Exams-Questions-Answers/blob/main/README.md',
+      filepath: '/resource/dva-c02/dva-c02-0.json',
     },
     {
       id: 'dva-c02-practice1',
       name: 'AWS DVA-C02 P1',
       fullName: 'AWS Certified Developer - Associate',
-      // description: 'Demonstrate your ability to design distributed systems on AWS.',
       icon: '🏗️',
       color: '#00d4ff',
-      available: false,
-      external: null
+      available: true,
+      external: null,
+      filepath: '/resource/dva-c02/dva-c02-1.json',
     },
     {
-      id: 'soa-c02',
+      id: 'dva-c02-practice2',
       name: 'AWS DVA-C02 P2',
       fullName: 'AWS Certified SysOps Administrator - Associate',
-      // description: 'Show your expertise in deploying, managing, and operating workloads on AWS.',
       icon: '⚙️',
       color: '#ff6b6b',
-      available: false,
-      external: null
+      available: true,
+      external: null,
+      filepath: '/resource/dva-c02/dva-c02-2.json',
     },
     {
-      id: 'clf-c02',
+      id: 'dva-c02-practice3',
       name: 'AWS DVA-C02 P3',
       fullName: 'AWS Certified Cloud Practitioner',
-      // description: 'Build your AWS Cloud knowledge and validate your foundational understanding.',
       icon: '☁️',
       color: '#4ecdc4',
-      available: false,
-      external: null
+      available: true,
+      external: null,
+      filepath: '/resource/dva-c02/dva-c02-3.json',
     },
     {
-      id: 'clf-c02',
+      id: 'dva-c02-practice4',
       name: 'AWS DVA-C02 P4',
       fullName: 'AWS Certified Cloud Practitioner',
-      // description: 'Build your AWS Cloud knowledge and validate your foundational understanding.',
-      icon: '☁️',
-      color: '#4ecdc4',
-      available: false,
-      external: null
+      icon: '🖌️',
+      color: '#F6D6AD',
+      available: true,
+      external: null,
+      filepath: '/resource/dva-c02/dva-c02-4.json',
     },
     {
-      id: 'clf-c02',
+      id: 'dva-c02-practice5',
       name: 'AWS DVA-C02 P5',
       fullName: 'AWS Certified Cloud Practitioner',
-      // description: 'Build your AWS Cloud knowledge and validate your foundational understanding.',
-      icon: '☁️',
-      color: '#4ecdc4',
-      available: false,
-      external: null
+      icon: '✏️',
+      color: '#C3DDFD',
+      available: true,
+      external: null,
+      filepath: '/resource/dva-c02/dva-c02-5.json',
     },
     {
-      id: 'clf-c02',
+      id: 'dva-c02-practice6',
       name: 'AWS DVA-C02 P6',
       fullName: 'AWS Certified Cloud Practitioner',
-      // description: 'Build your AWS Cloud knowledge and validate your foundational understanding.',
-      icon: '☁️',
-      color: '#4ecdc4',
-      available: false,
-      external: null
-    },
+      icon: '🐝',
+      color: '#FFAAA5',
+      available: true,
+      external: null,
+      filepath: '/resource/dva-c02/dva-c02-6.json',
+    }
+
   ];
 
   // Filter certifications by search query
@@ -93,7 +94,7 @@ function LandingPage({ onStartQuiz }) {
     if (cert.available) {
       // Clear quiz cache for this certification before starting
       localStorage.removeItem('quizState_' + cert.id);
-      onStartQuiz(cert.id);
+      onStartQuiz(cert.id, cert.filepath); 
     } else {
       setSelectedCert(cert);
       setShowComingSoon(true);

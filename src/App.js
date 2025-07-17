@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Routes, Route, useNavigate, useParams } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
 import LandingPage from './LandingPage';
 import Quiz from './Quiz';
 import './App.css';
@@ -7,9 +7,14 @@ import './App.css';
 function QuizWrapper() {
   const navigate = useNavigate();
   const { certificationId } = useParams();
+  const location = useLocation();
+  // Extract filepath from query string
+  const query = new URLSearchParams(location.search);
+  const filepath = query.get('filepath');
   return (
     <Quiz
       certificationId={certificationId}
+      filepath={filepath}
       onBackToLanding={() => navigate('/')} 
     />
   );
@@ -20,7 +25,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<LandingPage onStartQuiz={id => navigate(`/quiz/${id}`)} />} />
+        <Route path="/" element={<LandingPage onStartQuiz={(id, filepath) => navigate(`/quiz/${id}?filepath=${encodeURIComponent(filepath || '')}`)} />} />
         <Route path="/quiz/:certificationId" element={<QuizWrapper />} />
       </Routes>
     </div>

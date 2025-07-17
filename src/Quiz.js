@@ -15,7 +15,7 @@ function isValidArray(arr, len) {
   return Array.isArray(arr) && arr.length === len;
 }
 
-function Quiz({ certificationId, onBackToLanding }) {
+function Quiz({ certificationId, filepath, onBackToLanding }) {
   // LocalStorage key (namespace by certificationId if present)
   const storageKey = certificationId ? `quizState_${certificationId}` : 'quizState';
 
@@ -31,15 +31,21 @@ function Quiz({ certificationId, onBackToLanding }) {
 
   // Restore state from localStorage on mount (after questions are loaded)
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/resource/final-questions.json`)
-      .then(response => response.json())
+    if (!filepath) return;
+    // Ensure only one slash between base and path
+    const url = process.env.PUBLIC_URL.replace(/\/$/, '') + '/' + filepath.replace(/^\//, '');
+    fetch(url)
+      .then(response => {
+        if (!response.ok) throw new Error('File not found');
+        return response.json();
+      })
       .then(data => {
         setQuestions(data);
       })
       .catch(error => {
         console.error('Error loading questions:', error);
       });
-  }, []);
+  }, [filepath]);
 
   // Restore quiz state from localStorage after questions are loaded, or shuffle if not present
   useEffect(() => {
