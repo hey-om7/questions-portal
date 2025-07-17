@@ -1,0 +1,794 @@
+[
+    {
+        "question": "The development team at a HealthCare company has deployed EC2 instances in AWS Account A. These instances need to access patient data with Personally Identifiable Information (PII) on multiple S3 buckets in another AWS Account B. As a Developer Associate, which of the following solutions would you recommend for the given use-case?",
+        "options": [
+            "Copy the underlying AMI for the EC2 instances from Account A into Account B. Launch EC2 instances in Account B using this AMI and then access the PII data on Amazon S3 in Account B",
+            "Add a bucket policy to all the Amazon S3 buckets in Account B to allow access from EC2 instances in Account A",
+            "Create an IAM role (instance profile) in Account A and set Account B as a trusted entity. Attach this role to the EC2 instances in Account A and add an inline policy to this role to access S3 data from Account B",
+            "Create an IAM role with S3 access in Account B and set Account A as a trusted entity. Create another role (instance profile) in Account A and attach it to the EC2 instances in Account A and add an inline policy to this role to assume the role from Account B"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "The app development team at a social gaming mobile app wants to simplify the user sign up process for the app. The team is looking for a fully managed scalable solution for user management in anticipation of the rapid growth that the app foresees. As a Developer Associate, which of the following solutions would you suggest so that it requires the LEAST amount of development effort?",
+        "options": [
+            "Create a custom solution using EC2 and DynamoDB to facilitate sign up and user management for the mobile app",
+            "Create a custom solution using Lambda and DynamoDB to facilitate sign up and user management for the mobile app",
+            "Use Cognito Identity pools to facilitate sign up and user management for the mobile app",
+            "Use Cognito User pools to facilitate sign up and user management for the mobile app"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "The development team at a retail company is gearing up for the upcoming Thanksgiving sale and wants to make sure that the application's serverless backend running via Lambda functions does not hit latency bottlenecks as a result of the traffic spike. As a Developer Associate, which of the following solutions would you recommend to address this use-case?",
+        "options": [
+            "Configure Application Auto Scaling to manage Lambda reserved concurrency on a schedule",
+            "Add an Application Load Balancer in front of the Lambda functions",
+            "No need to make any special provisions as Lambda is automatically scalable because of its serverless nature",
+            "Configure Application Auto Scaling to manage Lambda provisioned concurrency on a schedule"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "The development team at an analytics company is using SQS queues for decoupling the various components of application architecture. As the consumers need additional time to process SQS messages, the development team wants to postpone the delivery of new messages to the queue for a few seconds. As a Developer Associate, which of the following solutions would you recommend to the development team?",
+        "options": [
+            "Use FIFO queues to postpone the delivery of new messages to the queue for a few seconds",
+            "Use dead-letter queues to postpone the delivery of new messages to the queue for a few seconds",
+            "Use visibility timeout to postpone the delivery of new messages to the queue for a few seconds",
+            "Use delay queues to postpone the delivery of new messages to the queue for a few seconds"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "Other than the Resources section, which of the following sections in a Serverless Application Model (SAM) Template is mandatory?",
+        "options": [
+            "Parameters",
+            "Mappings",
+            "Globals",
+            "Transform"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "A data analytics company is processing real-time Internet-of-Things (IoT) data via Kinesis Producer Library (KPL) and sending the data to a Kinesis Data Streams driven application. The application has halted data processing because of a ProvisionedThroughputExceeded exception. Which of the following actions would help in addressing this issue? (Select two)",
+        "options": [
+            "Configure the data producer to retry with an exponential backoff",
+            "Increase the number of shards within your data streams to provide enough capacity",
+            "Use Amazon Kinesis Agent instead of Kinesis Producer Library (KPL) for sending data to Kinesis Data Streams",
+            "Use Amazon SQS instead of Kinesis Data Streams",
+            "Use Kinesis enhanced fan-out for Kinesis Data Streams"
+        ],
+        "answer": [
+            1,
+            2
+        ]
+    },
+    {
+        "question": "The development team at an e-commerce company completed the last deployment for their application at a reduced capacity because of the deployment policy. The application took a performance hit because of the traffic spike due to an on-going sale. Which of the following represents the BEST deployment option for the upcoming application version such that it maintains at least the FULL capacity of the application and MINIMAL impact of failed deployment?",
+        "options": [
+            "Deploy the new application version using 'All at once' deployment policy",
+            "Deploy the new application version using 'Rolling' deployment policy",
+            "Deploy the new application version using 'Immutable' deployment policy",
+            "Deploy the new application version using 'Rolling with additional batch' deployment policy"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "A social gaming application supports the transfer of gift vouchers between users. When a user hits a certain milestone on the leaderboard, they earn a gift voucher that can be redeemed or transferred to another user. The development team wants to ensure that this transfer is captured in the database such that the records for both users are either written successfully with the new gift vouchers or the status quo is maintained. Which of the following solutions represent the best-fit options to meet the requirements for the given use-case? (Select two)",
+        "options": [
+            "Perform DynamoDB read and write operations with ConsistentRead parameter set to true",
+            "Complete both operations on Amazon RedShift in a single transaction block",
+            "Use the Amazon Athena transactional read and write APIs on the table items as a single, all-or-nothing operation",
+            "Use the DynamoDB transactional read and write APIs on the table items as a single, all-or-nothing operation",
+            "Complete both operations on RDS MySQL in a single transaction block"
+        ],
+        "answer": [
+            4,
+            5
+        ]
+    },
+    {
+        "question": "The technology team at an investment bank uses DynamoDB to facilitate high-frequency trading where multiple trades can try and update an item at the same time. Which of the following actions would make sure that only the last updated value of any item is used in the application?",
+        "options": [
+            "Use ConsistentRead = true while doing GetItem operation for any item",
+            "Use ConsistentRead = true while doing UpdateItem operation for any item",
+            "Use ConsistentRead = true while doing PutItem operation for any item",
+            "Use ConsistentRead = false while doing PutItem operation for any item"
+        ],
+        "answer": [
+            1
+        ]
+    },
+    {
+        "question": "The development team at a multi-national retail company wants to support trusted third-party authenticated users from the supplier organizations to create and update records in specific DynamoDB tables in the company's AWS account. As a Developer Associate, which of the following solutions would you suggest for the given use-case?",
+        "options": [
+            "Create a new IAM user in the company's AWS account for each of the third-party authenticated users from the supplier organizations. The users can then use the IAM user credentials to access DynamoDB",
+            "Create a new IAM group in the company's AWS account for each of the third-party authenticated users from the supplier organizations. The users can then use the IAM group credentials to access DynamoDB",
+            "Use Cognito Identity pools to enable trusted third-party authenticated users to access DynamoDB",
+            "Use Cognito User pools to enable trusted third-party authenticated users to access DynamoDB"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "A developer wants to package the code and dependencies for the application-specific Lambda functions as container images to be hosted on Amazon Elastic Container Registry (ECR). Which of the following options are correct for the given requirement? (Select two)",
+        "options": [
+            "Lambda supports both Windows and Linux-based container images",
+            "To deploy a container image to Lambda, the container image must implement the Lambda Runtime API",
+            "You can test the containers locally using the Lambda Runtime API",
+            "You can deploy Lambda function as a container image, with a maximum size of 15 GB",
+            "AWS Lambda service does not support Lambda functions that use multi-architecture container images"
+        ],
+        "answer": [
+            2,
+            5
+        ]
+    },
+    {
+        "question": "A development team is building a game where players can buy items with virtual coins. For every virtual coin bought by a user, both the players table as well as the items table in DynamodDB need to be updated simultaneously using an all-or-nothing operation. As a developer associate, how will you implement this functionality?",
+        "options": [
+            "Use BatchWriteItem API to update multiple tables simultaneously",
+            "Capture the transactions in the players table using DynamoDB streams and then sync with the items table",
+            "Use TransactWriteItems API of DynamoDB Transactions",
+            "Capture the transactions in the items table using DynamoDB streams and then sync with the players table"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "A CRM application is hosted on Amazon EC2 instances with the database tier using DynamoDB. The customers have raised privacy and security concerns regarding sending and receiving data across the public internet. As a developer associate, which of the following would you suggest as an optimal solution for providing communication between EC2 instances and DynamoDB without using the public internet?",
+        "options": [
+            "The firm can use a virtual private network (VPN) to route all DynamoDB network traffic through their own corporate network infrastructure",
+            "Configure VPC endpoints for DynamoDB that will provide required internal access without using public internet",
+            "Create a NAT Gateway to provide the necessary communication channel between EC2 instances and DynamoDB",
+            "Create an Internet Gateway to provide the necessary communication channel between EC2 instances and DynamoDB"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A company uses Amazon Simple Email Service (SES) to cost-effectively send susbscription emails to the customers. Intermittently, the SES service throws the error: Throttling – Maximum sending rate exceeded. As a developer associate, which of the following would you recommend to fix this issue?",
+        "options": [
+            "Configure Timeout mechanism for each request made to the SES service",
+            "Use Exponential Backoff technique to introduce delay in time before attempting to execute the operation again",
+            "Raise a service request with Amazon to increase the throttling limit for the SES API",
+            "Implement retry mechanism for all 4xx errors to avoid throttling error"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A serverless application built on AWS processes customer orders 24/7 using an AWS Lambda function and communicates with an external vendor's HTTP API for payment processing. The development team wants to notify the support team in near real-time using an existing Amazon Simple Notification Service (Amazon SNS) topic, but only when the external API error rate exceeds 5% of the total transactions processed in an hour. As an AWS Certified Developer Associate, which option will you suggest as the most efficient solution?",
+        "options": [
+            "Log the results of payment processing API calls to Amazon CloudWatch. Leverage Amazon CloudWatch Logs Insights to query the CloudWatch logs. Set up the Lambda function to check the output from CloudWatch Logs Insights on a schedule and send notification via the existing SNS topic when the error rate exceeds the specified rate",
+            "Log the results of payment processing API calls to Amazon CloudWatch. Leverage Amazon CloudWatch Metric Filter to look at the CloudWatch logs. Set up the Lambda function to check the output from CloudWatch Metric Filter on a schedule and send notification via the existing SNS topic when the error rate exceeds the specified rate",
+            "Configure and push high-resolution custom metrics to CloudWatch that record the failures of the external payment processing API calls. Create a CloudWatch alarm that sends a notification via the existing SNS topic when the error rate exceeds the specified rate",
+            "Configure CloudWatch metrics with detailed monitoring for the external payment processing API calls. Create a CloudWatch alarm that sends a notification via the existing SNS topic when the error rate exceeds the specified rate"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "A pharmaceutical company uses Amazon EC2 instances for application hosting and Amazon CloudFront for content delivery. A new research paper with critical findings has to be shared with a research team that is spread across the world. Which of the following represents the most optimal solution to address this requirement without compromising the security of the content?",
+        "options": [
+            "Use CloudFront signed cookies feature to control access to the file",
+            "Configure AWS Web Application Firewall (WAF) to monitor and control the HTTP and HTTPS requests that are forwarded to CloudFront",
+            "Use CloudFront signed URL feature to control access to the file",
+            "Using CloudFront's Field-Level Encryption to help protect sensitive data"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "A developer is defining the signers that can create signed URLs for their Amazon CloudFront distributions. Which of the following statements should the developer consider while defining the signers? (Select two)",
+        "options": [
+            "When you create a signer, the public key is with CloudFront and private key is used to sign a portion of URL",
+            "When you use the root user to manage CloudFront key pairs, you can only have up to two active CloudFront key pairs per AWS account",
+            "You can also use AWS Identity and Access Management (IAM) permissions policies to restrict what the root user can do with CloudFront key pairs",
+            "CloudFront key pairs can be created with any account that has administrative permissions and full access to CloudFront resources",
+            "Both the signers (trusted key groups and CloudFront key pairs) can be managed using the CloudFront APIs"
+        ],
+        "answer": [
+            1,
+            2
+        ]
+    },
+    {
+        "question": "A business hosts its website on Amazon EC2 instances and employs Auto Scaling to adjust its resources according to traffic spikes. However, users globally report slow loading times because static content hosted on the EC2 instances takes too long to load, even outside of busy periods. What pair of actions should be taken to improve the latency of the website? (Select two)",
+        "options": [
+            "Set up an Amazon CloudFront distribution to cache the static content with Amazon S3 configured as the origin",
+            "Transfer the application’s static content hosted on EC2 instances to Amazon S3",
+            "Upgrade the CPU and RAM available to the EC2 instances",
+            "Double the Auto Scaling group’s desired capacity",
+            "Migrate the application to AWS Lambda"
+        ],
+        "answer": [
+            1,
+            2
+        ]
+    },
+    {
+        "question": "A company wants to automate its order fulfillment and inventory tracking workflow. Starting from order creation to updating inventory to shipment, the entire process has to be tracked, managed and updated automatically. Which of the following would you recommend as the most optimal solution for this requirement?",
+        "options": [
+            "Use Amazon Simple Queue Service (Amazon SQS) queue to pass information from order management to inventory tracking workflow",
+            "Configure Amazon EventBridge to track the flow of work from order management to inventory tracking systems",
+            "Use Amazon SNS to develop event-driven applications that can share information",
+            "Use AWS Step Functions to coordinate and manage the components of order management and inventory tracking workflow"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "While defining a business workflow as state machine on AWS Step Functions, a developer has configured several states. Which of the following would you identify as the state that represents a single unit of work performed by a state machine?",
+        "options": [
+            "\"HelloWorld\": { \"Type\": \"Task\", \"Resource\": \"arn:aws:lambda:us-east-1:123456789012:function:HelloFunction\", \"Next\": \"AfterHelloWorldState\", \"Comment\": \"Run the HelloWorld Lambda function\" }",
+            "\"wait_until\" : { \"Type\": \"Wait\", \"Timestamp\": \"2016-03-14T01:59:00Z\", \"Next\": \"NextState\" }",
+            "\"No-op\": { \"Type\": \"Task\", \"Result\": { \"x-datum\": 0.381018, \"y-datum\": 622.2269926397355 }, \"ResultPath\": \"$.coords\", \"Next\": \"End\" }",
+            "\"FailState\": { \"Type\": \"Fail\", \"Cause\": \"Invalid response.\", \"Error\": \"ErrorA\" }"
+        ],
+        "answer": [
+            1
+        ]
+    },
+    {
+        "question": "An Auto Scaling group has a maximum capacity of 3, a current capacity of 2, and a scaling policy that adds 3 instances. When executing this scaling policy, what is the expected outcome?",
+        "options": [
+            "Amazon EC2 Auto Scaling adds 3 instances to the group",
+            "Amazon EC2 Auto Scaling adds 3 instances to the group and scales down 2 of those instances eventually",
+            "Amazon EC2 Auto Scaling adds only 1 instance to the group",
+            "Amazon EC2 Auto Scaling does not add any instances to the group, but suggests changing the scaling policy to add one instance"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "A junior developer has been asked to configure access to an Amazon EC2 instance hosting a web application. The developer has configured a new security group to permit incoming HTTP traffic from 0.0.0.0/0 and retained any default outbound rules. A custom Network Access Control List (NACL) connected with the instance's subnet is configured to permit incoming HTTP traffic from 0.0.0.0/0 and retained any default outbound rules. Which of the following solutions would you suggest if the EC2 instance needs to accept and respond to requests from the internet?",
+        "options": [
+            "The configuration is complete on the EC2 instance for accepting and responding to requests",
+            "An outbound rule must be added to the Network ACL (NACL) to allow the response to be sent to the client on the ephemeral port range",
+            "An outbound rule on the security group has to be configured, to allow the response to be sent to the client on the HTTP port",
+            "Outbound rules need to be configured both on the security group and on the NACL for sending responses to the Internet Gateway"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "As an AWS certified developer associate, you are working on an AWS CloudFormation template that will create resources for a company's cloud infrastructure. Your template is composed of three stacks which are Stack-A, Stack-B, and Stack-C. Stack-A will provision a VPC, a security group, and subnets for public web applications that will be referenced in Stack-B and Stack-C. After running the stacks you decide to delete them, in which order should you do it?",
+        "options": [
+            "Stack B, then Stack C, then Stack A",
+            "Stack A, then Stack B, then Stack C",
+            "Stack A, Stack C then Stack B",
+            "Stack C then Stack A then Stack B"
+        ],
+        "answer": [
+            1
+        ]
+    },
+    {
+        "question": "Your company has embraced cloud-native microservices architectures. New applications must be dockerized and stored in a registry service offered by AWS. The architecture should support dynamic port mapping and support multiple tasks from a single service on the same container instance. All services should run on the same EC2 instance. Which of the following options offers the best-fit solution for the given use-case?",
+        "options": [
+            "Application Load Balancer + ECS",
+            "Classic Load Balancer + Beanstalk",
+            "Application Load Balancer + Beanstalk",
+            "Classic Load Balancer + ECS"
+        ],
+        "answer": [
+            1
+        ]
+    },
+    {
+        "question": "What steps can a developer take to optimize the performance of a CPU-bound AWS Lambda function and ensure fast response time?",
+        "options": [
+            "Increase the function's provisioned concurrency",
+            "Increase the function's timeout",
+            "Increase the function's CPU",
+            "Increase the function's memory"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "A Developer is configuring Amazon EC2 Auto Scaling group to scale dynamically. Which metric below is NOT part of Target Tracking Scaling Policy?",
+        "options": [
+            "ASGAverageCPUUtilization",
+            "ApproximateNumberOfMessagesVisible",
+            "ASGAverageNetworkOut",
+            "ALBRequestCountPerTarget"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "You are a developer working on a web application written in Java and would like to use AWS Elastic Beanstalk for deployment because it would handle deployment, capacity provisioning, load balancing, auto-scaling, and application health monitoring. In the past, you connected to your provisioned instances through SSH to issue configuration commands. Now, you would like a configuration mechanism that automatically applies settings for you. Which of the following options would help do this?",
+        "options": [
+            "Use SSM parameter store as an input to your Elastic Beanstalk Configurations",
+            "Deploy a CloudFormation wrapper",
+            "Include config files in .ebextensions/ at the root of your source code",
+            "Use an AWS Lambda hook"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "An e-commerce company manages a microservices application that receives orders from various partners through a customized API for each partner exposed via Amazon API Gateway. The orders are processed by a shared Lambda function. How can the company notify each partner regarding the status of their respective orders in the most efficient manner, without affecting other partners' orders? Also, the solution should be scalable to accommodate new partners with minimal code changes required.",
+        "options": [
+            "Set up a separate SNS topic for each partner. Modify the Lambda function to publish messages for each partner to the partner's SNS topic",
+            "Set up a separate Lambda function for each partner. Set up an SNS topic and subscribe each partner to the SNS topic. Modify each partner's Lambda function to publish messages with specific attributes to the SNS topic and apply the appropriate filter policy to the topic subscriptions",
+            "Set up a separate SNS topic for each partner and subscribe each partner to the respective SNS topic. Modify the Lambda function to publish messages with specific attributes to the partner's SNS topic and apply the appropriate filter policy to the topic subscriptions",
+            "Set up an SNS topic and subscribe each partner to the SNS topic. Modify the Lambda function to publish messages with specific attributes to the SNS topic and apply the appropriate filter policy to the topic subscriptions"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "Consider an application that enables users to store their mobile phone images in the cloud and supports tens of thousands of users. The application should utilize an Amazon API Gateway REST API that leverages AWS Lambda functions for photo processing while storing photo details in Amazon DynamoDB. The application should allow users to create an account, upload images, and retrieve previously uploaded images, with images ranging in size from 500 KB to 5 MB. How will you design the application with the least operational overhead?",
+        "options": [
+            "Leverage Cognito user pools to manage user accounts and set up an Amazon Cognito user pool authorizer in API Gateway to control access to the API. Set up a Lambda function to store the images in Amazon S3 and save the image object's S3 key as part of the photo details in a DynamoDB table. Have the Lambda function retrieve previously uploaded images by querying DynamoDB for the S3 key",
+            "Leverage Cognito user pools to manage user accounts and set up an Amazon Cognito user pool authorizer in API Gateway to control access to the API. Set up a Lambda function to store the images as well as the image metadata in a DynamoDB table. Have the Lambda function retrieve previously uploaded images from DynamoDB",
+            "Use Cognito identity pools to manage user accounts and set up an Amazon Cognito identity pool authorizer in API Gateway to control access to the API. Set up a Lambda function to store the images in Amazon S3 and save the image object's S3 key as part of the photo details in a DynamoDB table. Have the Lambda function retrieve previously uploaded images by querying DynamoDB for the S3 key",
+            "Use Cognito identity pools to create an IAM user for each user of the application during the sign-up process. Leverage IAM authentication in API Gateway to control access to the API. Set up a Lambda function to store the images in Amazon S3 and save the image object's S3 key as part of the photo details in a DynamoDB table. Have the Lambda function retrieve previously uploaded images by querying DynamoDB for the S3 key"
+        ],
+        "answer": [
+            1
+        ]
+    },
+    {
+        "question": "A developer wants to securely store and retrieve various types of variables, such as remote API authentication information, API URL, and related credentials across different environments of an application deployed on Amazon Elastic Container Service (Amazon ECS). What would be the best approach that needs minimal modifications in the application code?",
+        "options": [
+            "Configure the application to fetch the variables from AWS KMS by storing the API URL and credentials as unique keys in KMS for each environment",
+            "Configure the application to fetch the variables and credentials from AWS Systems Manager Parameter Store by leveraging hierarchical unique paths in Parameter Store for each variable in each environment",
+            "Configure the application to fetch the variables from an encrypted file that is stored with the application by storing the API URL and credentials in unique files for each environment",
+            "Configure the application to fetch the variables from each of the deployed environments by defining the authentication information and API URL in the ECS task definition as unique names during the deployment process"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A media publishing company is using Amazon EC2 instances for running their business-critical applications. Their IT team is looking at reserving capacity apart from savings plans for the critical instances. As a Developer Associate, which of the following reserved instance types you would select to provide capacity reservations?",
+        "options": [
+            "Regional Reserved Instances",
+            "Both Regional Reserved Instances and Zonal Reserved Instances",
+            "Neither Regional Reserved Instances nor Zonal Reserved Instances",
+            "Zonal Reserved Instances"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "Recently in your organization, the AWS X-Ray SDK was bundled into each Lambda function to record outgoing calls for tracing purposes. When your team leader goes to the X-Ray service in the AWS Management Console to get an overview of the information collected, they discover that no data is available. What is the most likely reason for this issue?",
+        "options": [
+            "X-Ray only works with AWS Lambda aliases",
+            "Enable X-Ray sampling",
+            "Fix the IAM Role",
+            "Change the security group rules"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "You are a development team lead setting permissions for other IAM users with limited permissions. On the AWS Management Console, you created a dev group where new developers will be added, and on your workstation, you configured a developer profile. You would like to test that this user cannot terminate instances. Which of the following options would you execute?",
+        "options": [
+            "Using the CLI, create a dummy EC2 and delete it using another CLI call",
+            "Use the AWS CLI --test option",
+            "Retrieve the policy using the EC2 metadata service and use the IAM policy simulator",
+            "Use the AWS CLI --dry-run option"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "A business has purchased one m4.xlarge Reserved Instance but it has used three m4.xlarge instances concurrently for an hour. As a Developer, explain how the instances are charged?",
+        "options": [
+            "One instance is charged at one hour of Reserved Instance usage and the other two instances are charged at two hours of On-Demand usage",
+            "All instances are charged at one hour of Reserved Instance usage",
+            "All instances are charged at one hour of On-Demand Instance usage",
+            "One instance is charged at one hour of On-Demand usage and the other two instances are charged at two hours of Reserved Instance usage"
+        ],
+        "answer": [
+            1
+        ]
+    },
+    {
+        "question": "A business has their test environment built on Amazon EC2 configured on General purpose SSD volume. At which gp2 volume size will their test environment hit the max IOPS?",
+        "options": [
+            "10.6 TiB",
+            "5.3 TiB",
+            "16 TiB",
+            "2.7 TiB"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A pharmaceutical company runs their database workloads on Provisioned IOPS SSD (io1) volumes. As a Developer Associate, which of the following options would you identify as an INVALID configuration for io1 EBS volume types?",
+        "options": [
+            "200 GiB size volume with 2000 IOPS",
+            "200 GiB size volume with 10000 IOPS",
+            "200 GiB size volume with 15000 IOPS",
+            "200 GiB size volume with 5000 IOPS"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "An Accounting firm extensively uses Amazon EBS volumes for persistent storage of application data of Amazon EC2 instances. The volumes are encrypted to protect the critical data of the clients. As part of managing the security credentials, the project manager has come across a policy snippet that looks like the following: { \"Version\": \"2012-10-17\", \"Statement\": [ { \"Sid\": \"Allow for use of this Key\", \"Effect\": \"Allow\", \"Principal\": { \"AWS\": \"arn:aws:iam::111122223333:role/UserRole\" }, \"Action\": [ \"kms:GenerateDataKeyWithoutPlaintext\", \"kms:Decrypt\" ], \"Resource\": \"*\" }, { \"Sid\": \"Allow for EC2 Use\", \"Effect\": \"Allow\", \"Principal\": { \"AWS\": \"arn:aws:iam::111122223333:role/UserRole\" }, \"Action\": [ \"kms:CreateGrant\", \"kms:ListGrants\", \"kms:RevokeGrant\" ], \"Resource\": \"*\", \"Condition\": { \"StringEquals\": { \"kms:ViaService\": \"ec2.us-west-2.amazonaws.com\" } } ] } Which of the following options are correct regarding the policy?",
+        "options": [
+            "The first statement provides the security group the ability to generate a data key and decrypt that data key from the CMK when necessary",
+            "The second statement in this policy provides the security group (mentioned in first statement of the policy), the ability to create, list, and revoke grants for Amazon EC2",
+            "The first statement provides a specified IAM principal the ability to generate a data key and decrypt that data key from the CMK when necessary",
+            "The second statement in the policy mentions that all the resources stated in the first statement can take the specified role which will provide the ability to create, list, and revoke grants for Amazon EC2"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "A company wants to share information with a third party via an HTTP API endpoint managed by the third party. The company has the necessary API key to access the endpoint and the integration of the API key with the company's application code must not impact the application's performance. What is the most secure approach?",
+        "options": [
+            "Keep the API credentials in an encrypted table in MySQL RDS and use the credentials to make the API call by fetching the API credentials from RDS at runtime by using the AWS SDK",
+            "Keep the API credentials in an encrypted file in S3 and use the credentials to make the API call by fetching the API credentials from S3 at runtime by using the AWS SDK",
+            "Keep the API credentials in a local code variable and use the local code variable at runtime to make the API call",
+            "Keep the API credentials in AWS Secrets Manager and use the credentials to make the API call by fetching the API credentials at runtime by using the AWS SDK"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "A developer in your company was just promoted to Team Lead and will be in charge of code deployment on EC2 instances via AWS CodeCommit and AWS CodeDeploy. Per the new requirements, the deployment process should be able to change permissions for deployed files as well as verify the deployment success. Which of the following actions should the new Developer take?",
+        "options": [
+            "Define an appspec.yml file in the codebuild/ directory",
+            "Define a buildspec.yml file in the root directory",
+            "Define a buildspec.yml file in the codebuild/ directory",
+            "Define an appspec.yml file in the root directory"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "A university has created a student portal that is accessible through a smartphone app and web application. The smartphone app is available in both Android and IOS and the web application works on most major browsers. Students will be able to do group study online and create forum questions. All changes made via smartphone devices should be available even when offline and should synchronize with other devices. Which of the following AWS services will meet these requirements?",
+        "options": [
+            "BeanStalk",
+            "Cognito Identity Pools",
+            "Cognito Sync",
+            "Cognito User Pools"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "As an AWS Certified Developer Associate, you have been hired to work with the development team at a company to create a REST API using the serverless architecture. Which of the following solutions will you choose to move the company to the serverless architecture paradigm?",
+        "options": [
+            "API Gateway exposing Lambda Functionality",
+            "Fargate with Lambda at the front",
+            "Public-facing Application Load Balancer with ECS on Amazon EC2",
+            "Route 53 with EC2 as backend"
+        ],
+        "answer": [
+            1
+        ]
+    },
+    {
+        "question": "A developer needs to automate software package deployment to both Amazon EC2 instances and virtual servers running on-premises, as part of continuous integration and delivery that the business has adopted. Which AWS service should he use to accomplish this task?",
+        "options": [
+            "AWS CodePipeline",
+            "AWS CodeBuild",
+            "AWS Elastic Beanstalk",
+            "AWS CodeDeploy"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "A company needs a version control system for their fast development lifecycle with incremental changes, version control, and support to existing Git tools. Which AWS service will meet these requirements?",
+        "options": [
+            "AWS CodePipeline",
+            "Amazon Versioned S3 Bucket",
+            "AWS CodeCommit",
+            "AWS CodeBuild"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "As a senior architect, you are responsible for the development, support, maintenance, and implementation of all database applications written using NoSQL technology. A new project demands a throughput requirement of 10 strongly consistent reads per second of 6KB in size each. How many read capacity units will you need when configuring your DynamoDB table?",
+        "options": [
+            "10",
+            "60",
+            "30",
+            "20"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "As a Senior Developer, you are tasked with creating several API Gateway powered APIs along with your team of developers. The developers are working on the API in the development environment, but they find the changes made to the APIs are not reflected when the API is called. As a Developer Associate, which of the following solutions would you recommend for this use-case?",
+        "options": [
+            "Developers need IAM permissions on API execution component of API Gateway",
+            "Enable Lambda authorizer to access API",
+            "Use Stage Variables for development state of API",
+            "Redeploy the API to an existing stage or to a new stage"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "A developer working with EC2 Windows instance has installed Kinesis Agent for Windows to stream JSON-formatted log files to Amazon Simple Storage Service (S3) via Amazon Kinesis Data Firehose. The developer wants to understand the sink type capabilities of Kinesis Firehose. Which of the following sink types is NOT supported by Kinesis Firehose.",
+        "options": [
+            "Amazon Elasticsearch Service (Amazon ES) with optionally backing up data to Amazon S3",
+            "Amazon Simple Storage Service (Amazon S3) as a direct Firehose destination",
+            "Amazon Redshift with Amazon S3",
+            "Amazon ElastiCache with Amazon S3 as backup"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "A startup has been experimenting with DynamoDB in its new test environment. The development team has discovered that some of the write operations have been overwriting existing items that have the specified primary key. This has messed up their data, leading to data discrepancies. Which DynamoDB write option should be selected to prevent this kind of overwriting?",
+        "options": [
+            "Batch writes",
+            "Conditional writes",
+            "Atomic Counters",
+            "Use Scan operation"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A development team is working on an AWS Lambda function that accesses DynamoDB. The Lambda function must do an upsert, that is, it must retrieve an item and update some of its attributes or create the item if it does not exist. Which of the following represents the solution with MINIMUM IAM permissions that can be used for the Lambda function to achieve this functionality?",
+        "options": [
+            "dynamodb:AddItem, dynamodb:GetItem",
+            "dynamodb:UpdateItem, dynamodb:GetItem",
+            "dynamodb:GetRecords, dynamodb:PutItem, dynamodb:UpdateTable",
+            "dynamodb:UpdateItem, dynamodb:GetItem, dynamodb:PutItem"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A company is using a Border Gateway Protocol (BGP) based AWS VPN connection to connect from its on-premises data center to Amazon EC2 instances in the company’s account. The development team can access an EC2 instance in subnet A but is unable to access an EC2 instance in subnet B in the same VPC. Which logs can be used to verify whether the traffic is reaching subnet B?",
+        "options": [
+            "VPN logs",
+            "Subnet logs",
+            "VPC Flow Logs",
+            "BGP logs"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "Your team lead has asked you to learn AWS CloudFormation to create a collection of related AWS resources and provision them in an orderly fashion. You decide to provide AWS-specific parameter types to catch invalid values. When specifying parameters which of the following is not a valid Parameter type?",
+        "options": [
+            "String",
+            "DependentParameter",
+            "CommaDelimitedList",
+            "AWS::EC2::KeyPair::KeyName"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A company runs its flagship application on a fleet of Amazon EC2 instances. After misplacing a couple of private keys from the SSH key pairs, they have decided to re-use their SSH key pairs for the different instances across AWS Regions. As a Developer Associate, which of the following would you recommend to address this use-case?",
+        "options": [
+            "It is not possible to reuse SSH key pairs across AWS Regions",
+            "Store the public and private SSH key pair in AWS Trusted Advisor and access it across AWS Regions",
+            "Generate a public SSH key from a private SSH key. Then, import the key into each of your AWS Regions",
+            "Encrypt the private SSH key and store it in the S3 bucket to be accessed from any AWS Region"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "While troubleshooting, a developer realized that the Amazon EC2 instance is unable to connect to the Internet using the Internet Gateway. Which conditions should be met for Internet connectivity to be established? (Select two)",
+        "options": [
+            "The instance's subnet is not associated with any route table",
+            "The network ACLs associated with the subnet must have rules to allow inbound and outbound traffic",
+            "The instance's subnet is associated with multiple route tables with conflicting configurations",
+            "The route table in the instance’s subnet should have a route to an Internet Gateway",
+            "The subnet has been configured to be Public and has no access to the internet"
+        ],
+        "answer": [
+            2,
+            4
+        ]
+    },
+    {
+        "question": "You have launched several AWS Lambda functions written in Java. A new requirement was given that over 1MB of data should be passed to the functions and should be encrypted and decrypted at runtime. Which of the following methods is suitable to address the given use-case?",
+        "options": [
+            "Use KMS direct encryption and store as file",
+            "Use Envelope Encryption and reference the data as file within the code",
+            "Use Envelope Encryption and store as environment variable",
+            "Use KMS Encryption and store as environment variable"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A developer is building a serverless application on AWS and wants to establish an accelerated development workflow. The workflow must allow the developer to deploy incremental changes for testing without deploying the entire application for every code commit. The developer wants to streamline the process while minimizing deployment time. What should the developer do to meet these requirements?",
+        "options": [
+            "Use the cdk deploy command from the AWS Cloud Development Kit (AWS CDK) to deploy incremental changes to AWS for testing",
+            "Use the sam deploy command from the AWS Serverless Application Model (AWS SAM) to deploy incremental changes",
+            "Use the sam sync command from the AWS Serverless Application Model (AWS SAM) to deploy incremental changes",
+            "Use the cdk diff command from the AWS Cloud Development Kit (AWS CDK) to deploy incremental changes to AWS for testing"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "A developer is looking at establishing access control for an API that connects to a Lambda function downstream. Which of the following represents a mechanism that CANNOT be used for authenticating with the API Gateway?",
+        "options": [
+            "Standard AWS IAM roles and policies",
+            "AWS Security Token Service (STS)",
+            "Lambda Authorizer",
+            "Cognito User Pools"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A company uses AWS CodeDeploy to deploy applications from GitHub to EC2 instances running Amazon Linux. The deployment process uses a file called appspec.yml for specifying deployment hooks. A final lifecycle event should be specified to verify the deployment success. Which of the following hook events should be used to verify the success of the deployment?",
+        "options": [
+            "ValidateService",
+            "AfterInstall",
+            "ApplicationStart",
+            "AllowTraffic"
+        ],
+        "answer": [
+            1
+        ]
+    },
+    {
+        "question": "A company has created an Amazon S3 bucket that holds customer data. The team lead has just enabled access logging to this bucket. The bucket size has grown substantially after starting access logging. Since no new files have been added to the bucket, the perplexed team lead is looking for an answer. Which of the following reasons explains this behavior?",
+        "options": [
+            "Erroneous Bucket policies for batch uploads can sometimes be responsible for the exponential growth of S3 Bucket size",
+            "A DDoS attack on your S3 bucket can potentially blow up the size of data in the bucket if the bucket security is compromised during the attack",
+            "Object Encryption has been enabled and each object is stored twice as part of this configuration",
+            "S3 access logging is pointing to the same bucket and is responsible for the substantial growth of bucket size"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "A diagnostic lab stores its data on DynamoDB. The lab wants to backup a particular DynamoDB table data on Amazon S3, so it can download the S3 backup locally for some operational use. Which of the following options is NOT feasible?",
+        "options": [
+            "Use AWS Data Pipeline to export your table to an S3 bucket in the account of your choice and download locally",
+            "Use Hive with Amazon EMR to export your data to an S3 bucket and download locally",
+            "Use AWS Glue to copy your table to Amazon S3 and download locally",
+            "Use the DynamoDB on-demand backup capability to write to Amazon S3 and download locally"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "An application running on EC2 instances processes messages from an SQS queue. However, sometimes the messages are not processed and they end up in errors. These messages need to be isolated for further processing and troubleshooting. Which of the following options will help achieve this?",
+        "options": [
+            "Increase the VisibilityTimeout",
+            "Use DeleteMessage",
+            "Reduce the VisibilityTimeout",
+            "Implement a Dead-Letter Queue"
+        ],
+        "answer": [
+            4
+        ]
+    },
+    {
+        "question": "As a Team Lead, you are expected to generate a report of the code builds for every week to report internally and to the client. This report consists of the number of code builds performed for a week, the percentage success and failure, and overall time spent on these builds by the team members. You also need to retrieve the CodeBuild logs for failed builds and analyze them in Athena. Which of the following options will help achieve this?",
+        "options": [
+            "Use CloudWatch Events",
+            "Use AWS Lambda integration",
+            "Enable S3 and CloudWatch Logs integration",
+            "Use AWS CloudTrail and deliver logs to S3"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "After a code review, a developer has been asked to make his publicly accessible S3 buckets private, and enable access to objects with a time-bound constraint. Which of the following options will address the given use-case?",
+        "options": [
+            "Use Bucket policy to block the unintended access",
+            "Share pre-signed URLs with resources that need access",
+            "Use Routing policies to re-route unintended access",
+            "It is not possible to implement time constraints on Amazon S3 Bucket access"
+        ],
+        "answer": [
+            2
+        ]
+    },
+    {
+        "question": "A developer with access to the AWS Management Console terminated an instance in the us-east-1a availability zone. The attached EBS volume remained and is now available for attachment to other instances. Your colleague launches a new Linux EC2 instance in the us-east-1e availability zone and is attempting to attach the EBS volume. Your colleague informs you that it is not possible and need your help. Which of the following explanations would you provide to them?",
+        "options": [
+            "The required IAM permissions are missing",
+            "EBS volumes are region locked",
+            "EBS volumes are AZ locked",
+            "The EBS volume is encrypted"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "As a Developer, you are given a document written in YAML that represents the architecture of a serverless application. The first line of the document contains Transform: 'AWS::Serverless-2016-10-31'. What does the Transform section in the document represent?",
+        "options": [
+            "It represents a Lambda function definition",
+            "It represents an intrinsic function",
+            "Presence of Transform section indicates it is a Serverless Application Model (SAM) template",
+            "Presence of Transform section indicates it is a CloudFormation Parameter"
+        ],
+        "answer": [
+            3
+        ]
+    },
+    {
+        "question": "You create an Auto Scaling group to work with an Application Load Balancer. The scaling group is configured with a minimum size value of 5, a maximum value of 20, and the desired capacity value of 10. One of the 10 EC2 instances has been reported as unhealthy. Which of the following actions will take place?",
+        "options": [
+            "The ASG will terminate the EC2 Instance",
+            "The ASG will detach the EC2 instance from the group, and leave it running",
+            "The ASG will keep the instance running and re-start the application",
+            "The ASG will format the root EBS drive on the EC2 instance and run the User Data again"
+        ],
+        "answer": [
+            1
+        ]
+    },
+    {
+        "question": "A company has a cloud system in AWS with components that send and receive messages using SQS queues. While reviewing the system you see that it processes a lot of information and would like to be aware of any limits of the system. Which of the following represents the maximum number of messages that can be stored in an SQS queue?",
+        "options": [
+            "no limit",
+            "10000",
+            "100000",
+            "10000000"
+        ],
+        "answer": [
+            1
+        ]
+    }
+]
