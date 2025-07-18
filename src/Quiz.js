@@ -498,6 +498,7 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
             transition: dragging ? 'none' : 'box-shadow 0.2s',
             opacity: dragging ? 0.85 : 1,
             userSelect: 'none',
+            touchAction: 'none', // Prevent background scroll/gestures on mobile
           }}
           title="Ask Gemini to explain this question"
           onClick={handleBubbleClick}
@@ -530,8 +531,8 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
               background: 'linear-gradient(135deg, #18182f 0%, #23234a 100%)',
               borderRadius: 18,
               padding: 32,
-              minWidth: 340,
-              maxWidth: 500,
+              minWidth: 340, // increased from 340
+              maxWidth: 1000, // increased from 500
               boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
               position: 'relative',
               border: '1.5px solid #23234a',
