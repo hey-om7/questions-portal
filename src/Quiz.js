@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Gemini logo using the SVG from public/images/gemini-icon.svg
 const GeminiLogo = () => (
@@ -288,6 +290,20 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
         })
       });
       const data = await response.json();
+      // Handle invalid API key error
+      if (
+        response.status === 400 &&
+        data &&
+        data.error &&
+        data.error.message === 'API key not valid. Please pass a valid API key.'
+      ) {
+        localStorage.removeItem('geminiApiKey');
+        setGeminiApiKey('');
+        setGeminiError('Your Gemini API key is invalid. Please enter a valid API key.');
+        setAwaitingApiKey(true);
+        toast.error('Your Gemini API key is invalid. Please enter a valid API key.');
+        return;
+      }
       if (
         data &&
         data.candidates &&
@@ -459,6 +475,7 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
 
   return (
     <div className="app" style={{ position: 'relative' }}>
+      <ToastContainer position="bottom-center" autoClose={3500} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
       {/* Gemini Floating Button (Draggable) */}
       {questions.length > 0 && currentQuestionIndex < questions.length && (
         <div
@@ -532,7 +549,7 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
                 <div>
                   <label style={{ fontWeight: 500, marginBottom: 8, display: 'block', color: '#64ffda', fontSize: 15 }}>Enter Gemini API Key:</label>
                   <div style={{ fontSize: 14, color: '#b0b0c3', marginBottom: 10 }}>
-                    Please enter your Gemini API token. You can obtain one from the Gemini API documentation page.
+                    Please enter your Gemini API token. You can obtain one from the Gemini API documentation page. Your token stays on your device and is only used for your own access. We never collect or store it anywhere else.
                   </div>
                   <input
                     type="password"
