@@ -259,7 +259,11 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
     setGeminiError('');
     setGeminiResponse('');
     const key = overrideKey || geminiApiKey;
-    const prompt = `${currentQuestion?.question || ''}`;
+    const optionsText = currentShuffledOptions
+      .map((opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`)
+      .join('\n');
+    const explainPrompt =
+      'For each option, explain in a short brief sentence why it is correct or incorrect.';
     try {
       // Gemini 2.0 Flash API endpoint (v1beta)
       const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
@@ -269,10 +273,14 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
           'X-goog-api-key': key,
         },
         body: JSON.stringify({
-          contents: [{ parts: [
-            { text: prompt },
-            {text:"Explain this question in 1 brief short sentence."}
-          ] }]
+          contents: [{
+            parts: [
+              { text: currentQuestion?.question || '' },
+              { text: 'Options:' },
+              { text: optionsText },
+              { text: explainPrompt },
+            ]
+          }]
         })
       });
       const data = await response.json();
@@ -506,6 +514,8 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
               boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
               position: 'relative',
               border: '1.5px solid #23234a',
+              maxHeight: '80vh',
+              overflow: 'auto',
             }}
             onClick={e => e.stopPropagation()}
           >
@@ -623,11 +633,14 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
                   fontSize: 16,
                   border: '1.5px solid #23234a',
                   marginTop: 4,
-                  whiteSpace: 'pre-line',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
                   minHeight: 60,
+                  maxHeight: '40vh',
+                  overflowY: 'auto',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
                 }}>
                   {geminiLoading ? (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40 }}>
@@ -643,7 +656,9 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
                       <style>{`@keyframes spinGemini { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
                     </div>
                   ) : geminiResponse?.trim()
-                    ? renderGeminiResponse(geminiResponse)
+                    ? geminiResponse.trim().split(/\r?\n/).filter(Boolean).map((line, idx) => (
+                        <div key={idx} style={{ marginBottom: 8, width: '100%' }}>{renderGeminiResponse(line)}</div>
+                      ))
                     : (!geminiLoading && !geminiError && 'No explanation available.')}
                 </div>
                 <button
