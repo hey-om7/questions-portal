@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 // Gemini logo using the SVG from public/images/gemini-icon.svg
@@ -42,6 +42,15 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
   const [geminiError, setGeminiError] = useState('');
   const [geminiResponse, setGeminiResponse] = useState('');
   const [awaitingApiKey, setAwaitingApiKey] = useState(false);
+
+  // Draggable Gemini bubble state
+  const [bubblePos, setBubblePos] = useState({ top: 110, left: null, right: 32 });
+  const [dragging, setDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const bubbleRef = useRef(null);
+  const dragMoved = useRef(false);
+  const dragStartPos = useRef({ x: 0, y: 0 });
+  const DRAG_THRESHOLD = 5; // px
 
   // Restore state from localStorage on mount (after questions are loaded)
   useEffect(() => {
@@ -136,6 +145,67 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Handle drag start
+  const handleBubbleMouseDown = (e) => {
+    e.preventDefault();
+    setDragging(true);
+    dragMoved.current = false;
+    const rect = bubbleRef.current.getBoundingClientRect();
+    const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+    setDragOffset({
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    });
+    dragStartPos.current = { x: clientX, y: clientY };
+  };
+
+  // Handle drag move
+  useEffect(() => {
+    if (!dragging) return;
+    const handleMove = (e) => {
+      let clientX, clientY;
+      if (e.type.startsWith('touch')) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      // Only set dragMoved if moved more than threshold
+      if (!dragMoved.current) {
+        const dx = clientX - dragStartPos.current.x;
+        const dy = clientY - dragStartPos.current.y;
+        if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
+          dragMoved.current = true;
+        }
+      }
+      const newLeft = clientX - dragOffset.x;
+      const newTop = clientY - dragOffset.y;
+      setBubblePos({ top: Math.max(0, newTop), left: Math.max(0, newLeft), right: null });
+    };
+    const handleUp = () => setDragging(false);
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    window.addEventListener('touchmove', handleMove);
+    window.addEventListener('touchend', handleUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleUp);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('touchend', handleUp);
+    };
+  }, [dragging, dragOffset]);
+
+  // Only trigger click if not dragged
+  const handleBubbleClick = (e) => {
+    if (dragMoved.current) {
+      dragMoved.current = false;
+      return;
+    }
+    handleGeminiButtonClick(e);
+  };
+
   // Helper to get current question's shuffled options and index map
   const getCurrentShuffledOptions = () => {
     if (shuffledOptions.length === questions.length) {
@@ -189,7 +259,7 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
     setGeminiError('');
     setGeminiResponse('');
     const key = overrideKey || geminiApiKey;
-    const prompt = `${currentQuestion?.question || ''}\n\nExplain this in 1 brief short sentence.`;
+    const prompt = `${currentQuestion?.question || ''}`;
     try {
       // Gemini 2.0 Flash API endpoint (v1beta)
       const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
@@ -199,7 +269,10 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
           'X-goog-api-key': key,
         },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
+          contents: [{ parts: [
+            { text: prompt },
+            {text:"Explain this question in 1 brief short sentence."}
+          ] }]
         })
       });
       const data = await response.json();
@@ -374,15 +447,17 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
 
   return (
     <div className="app" style={{ position: 'relative' }}>
-      {/* Gemini Floating Button */}
+      {/* Gemini Floating Button (Draggable) */}
       {questions.length > 0 && currentQuestionIndex < questions.length && (
         <div
+          ref={bubbleRef}
           style={{
             position: 'fixed',
-            top: 110, // adjust as needed to align with question number
-            right: 32,
+            top: bubblePos.top,
+            left: bubblePos.left !== null ? bubblePos.left : 'auto',
+            right: bubblePos.right !== null ? bubblePos.right : 'auto',
             zIndex: 1000,
-            cursor: 'pointer',
+            cursor: dragging ? 'grabbing' : 'grab',
             width: 48,
             height: 48,
             borderRadius: '50%',
@@ -391,10 +466,14 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            transition: 'box-shadow 0.2s',
+            transition: dragging ? 'none' : 'box-shadow 0.2s',
+            opacity: dragging ? 0.85 : 1,
+            userSelect: 'none',
           }}
           title="Ask Gemini to explain this question"
-          onClick={handleGeminiButtonClick}
+          onClick={handleBubbleClick}
+          onMouseDown={handleBubbleMouseDown}
+          onTouchStart={handleBubbleMouseDown}
         >
           <GeminiLogo />
         </div>
@@ -545,8 +624,25 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
                   border: '1.5px solid #23234a',
                   marginTop: 4,
                   whiteSpace: 'pre-line',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 60,
                 }}>
-                  {geminiResponse?.trim()
+                  {geminiLoading ? (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40 }}>
+                      <span style={{
+                        display: 'inline-block',
+                        width: 32,
+                        height: 32,
+                        border: '3px solid #64ffda',
+                        borderTop: '3px solid #23234a',
+                        borderRadius: '50%',
+                        animation: 'spinGemini 1s linear infinite',
+                      }} />
+                      <style>{`@keyframes spinGemini { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+                    </div>
+                  ) : geminiResponse?.trim()
                     ? renderGeminiResponse(geminiResponse)
                     : (!geminiLoading && !geminiError && 'No explanation available.')}
                 </div>
