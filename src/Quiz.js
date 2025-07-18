@@ -52,6 +52,9 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
   const dragStartPos = useRef({ x: 0, y: 0 });
   const DRAG_THRESHOLD = 5; // px
 
+  // Helper for spinner gradient
+  const spinnerGradientId = 'gemini-spinner-gradient';
+
   // Restore state from localStorage on mount (after questions are loaded)
   useEffect(() => {
     if (!filepath) return;
@@ -262,8 +265,8 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
     const optionsText = currentShuffledOptions
       .map((opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`)
       .join('\n');
-    const explainPrompt =
-      'For each option, explain in a short brief sentence why it is correct or incorrect.';
+    const explainQuestionPrompt = 'Explain the question in a brief sentence.';
+    const explainOptionsPrompt = 'For each option, explain in a short brief sentence why it is correct or incorrect.';
     try {
       // Gemini 2.0 Flash API endpoint (v1beta)
       const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
@@ -276,9 +279,10 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
           contents: [{
             parts: [
               { text: currentQuestion?.question || '' },
+              { text: explainQuestionPrompt },
               { text: 'Options:' },
               { text: optionsText },
-              { text: explainPrompt },
+              { text: explainOptionsPrompt },
             ]
           }]
         })
@@ -641,19 +645,45 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
                   overflowY: 'auto',
                   wordBreak: 'break-word',
                   overflowWrap: 'break-word',
+                  flex: 1,
                 }}>
                   {geminiLoading ? (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40 }}>
-                      <span style={{
-                        display: 'inline-block',
-                        width: 32,
-                        height: 32,
-                        border: '3px solid #64ffda',
-                        borderTop: '3px solid #23234a',
-                        borderRadius: '50%',
-                        animation: 'spinGemini 1s linear infinite',
-                      }} />
-                      <style>{`@keyframes spinGemini { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+                    <div style={{
+                      display: 'flex',
+                      flex: 1,
+                      minHeight: 80,
+                      width: '100%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <svg width="36" height="36" viewBox="0 0 36 36" style={{ display: 'block' }}>
+                        <defs>
+                          <linearGradient id={spinnerGradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#64ffda" />
+                            <stop offset="100%" stopColor="#00d4ff" />
+                          </linearGradient>
+                        </defs>
+                        <circle
+                          cx="18" cy="18" r="15"
+                          fill="none"
+                          stroke="#23234a"
+                          strokeWidth="5"
+                          opacity="0.18"
+                        />
+                        <circle
+                          cx="18" cy="18" r="15"
+                          fill="none"
+                          stroke={`url(#${spinnerGradientId})`}
+                          strokeWidth="5"
+                          strokeDasharray="80 40"
+                          strokeLinecap="round"
+                          style={{
+                            transformOrigin: '50% 50%',
+                            animation: 'spinGemini 1s linear infinite',
+                          }}
+                        />
+                        <style>{`@keyframes spinGemini { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+                      </svg>
                     </div>
                   ) : geminiResponse?.trim()
                     ? geminiResponse.trim().split(/\r?\n/).filter(Boolean).map((line, idx) => (
