@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+// Gemini logo SVG (simple placeholder, replace with your own if needed)
+const GeminiLogo = () => (
+  <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="16" r="16" fill="#4285F4"/>
+    <circle cx="16" cy="16" r="10" fill="#fff"/>
+    <circle cx="16" cy="16" r="6" fill="#4285F4"/>
+  </svg>
+);
+
 function shuffleArrayWithMapping(array) {
   const arr = array.map((item, idx) => ({ item, originalIndex: idx }));
   for (let i = arr.length - 1; i > 0; i--) {
@@ -28,6 +37,15 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
   const [isMobile, setIsMobile] = useState(false);
   const [shuffledOptions, setShuffledOptions] = useState([]); // Array of arrays, one per question
   const [optionIndexMap, setOptionIndexMap] = useState([]); // Array of arrays, one per question
+
+  // Gemini dialog state
+  const [showGeminiDialog, setShowGeminiDialog] = useState(false);
+  const [geminiApiKey, setGeminiApiKey] = useState('');
+  const [apiKeyInput, setApiKeyInput] = useState('');
+  const [geminiLoading, setGeminiLoading] = useState(false);
+  const [geminiError, setGeminiError] = useState('');
+  const [geminiResponse, setGeminiResponse] = useState('');
+  const [awaitingApiKey, setAwaitingApiKey] = useState(false);
 
   // Restore state from localStorage on mount (after questions are loaded)
   useEffect(() => {
@@ -107,6 +125,12 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
     localStorage.setItem(storageKey, JSON.stringify(stateToSave));
   }, [currentQuestionIndex, selectedOptions, showResult, optionIndexMap, shuffledOptions, score, questions.length]);
 
+  // On mount, try to load Gemini API key from localStorage
+  useEffect(() => {
+    const key = localStorage.getItem('geminiApiKey');
+    if (key) setGeminiApiKey(key);
+  }, []);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -135,6 +159,83 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
   const currentOptionIndexMap = getCurrentOptionIndexMap();
   const currentSelectedOptions = selectedOptions[currentQuestionIndex] || [];
   const currentShowResult = showResult[currentQuestionIndex] || false;
+
+  // Handler for floating Gemini button
+  const handleGeminiButtonClick = () => {
+    setGeminiError('');
+    setGeminiResponse('');
+    if (!geminiApiKey) {
+      setAwaitingApiKey(true);
+      setShowGeminiDialog(true);
+    } else {
+      setAwaitingApiKey(false);
+      setShowGeminiDialog(true);
+      handleGeminiExplain();
+    }
+  };
+
+  // Handler for API key submission
+  const handleApiKeySubmit = (e) => {
+    e.preventDefault();
+    if (apiKeyInput.trim()) {
+      localStorage.setItem('geminiApiKey', apiKeyInput.trim());
+      setGeminiApiKey(apiKeyInput.trim());
+      setAwaitingApiKey(false);
+      setGeminiError('');
+      setGeminiResponse('');
+      handleGeminiExplain(apiKeyInput.trim());
+    }
+  };
+
+  // Handler for Gemini API call
+  const handleGeminiExplain = async (overrideKey) => {
+    setGeminiLoading(true);
+    setGeminiError('');
+    setGeminiResponse('');
+    const key = overrideKey || geminiApiKey;
+    const prompt = `${currentQuestion?.question || ''}\n\nExplain this in 1 brief short sentence.`;
+    try {
+      // Gemini 2.0 Flash API endpoint (v1beta)
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-goog-api-key': key,
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      });
+      const data = await response.json();
+      if (
+        data &&
+        data.candidates &&
+        data.candidates[0] &&
+        data.candidates[0].content &&
+        data.candidates[0].content.parts &&
+        data.candidates[0].content.parts[0] &&
+        typeof data.candidates[0].content.parts[0].text === 'string'
+      ) {
+        setGeminiResponse(data.candidates[0].content.parts[0].text);
+      } else if (data.error && data.error.message) {
+        setGeminiError(data.error.message);
+      } else {
+        setGeminiError('Unexpected response from Gemini API.');
+      }
+    } catch (err) {
+      setGeminiError('Failed to fetch from Gemini API.');
+    } finally {
+      setGeminiLoading(false);
+    }
+  };
+
+  // Handler to close Gemini dialog
+  const handleCloseGeminiDialog = () => {
+    setShowGeminiDialog(false);
+    setGeminiError('');
+    setGeminiResponse('');
+    setApiKeyInput('');
+  };
 
   // Only save to localStorage after a question is submitted
   const saveProgress = (nextQuestionIndex, nextSelectedOptions, nextShowResult, nextOptionIndexMap, nextShuffledOptions) => {
@@ -276,7 +377,124 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
   }
 
   return (
-    <div className="app">
+    <div className="app" style={{ position: 'relative' }}>
+      {/* Gemini Floating Button */}
+      {questions.length > 0 && currentQuestionIndex < questions.length && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 110, // adjust as needed to align with question number
+            right: 32,
+            zIndex: 1000,
+            cursor: 'pointer',
+            width: 48,
+            height: 48,
+            borderRadius: '50%',
+            background: '#fff',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'box-shadow 0.2s',
+          }}
+          title="Ask Gemini to explain this question"
+          onClick={handleGeminiButtonClick}
+        >
+          <GeminiLogo />
+        </div>
+      )}
+
+      {/* Gemini Dialog */}
+      {showGeminiDialog && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.35)',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onClick={handleCloseGeminiDialog}
+        >
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: 12,
+              padding: 24,
+              minWidth: 320,
+              maxWidth: 480,
+              boxShadow: '0 4px 24px rgba(0,0,0,0.18)',
+              position: 'relative',
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
+              <GeminiLogo />
+              <span style={{ fontWeight: 600, fontSize: 20, marginLeft: 12 }}>Gemini Explain</span>
+            </div>
+            {awaitingApiKey ? (
+              <form onSubmit={handleApiKeySubmit}>
+                <label style={{ fontWeight: 500, marginBottom: 8, display: 'block' }}>Enter Gemini API Key:</label>
+                <input
+                  type="password"
+                  value={apiKeyInput}
+                  onChange={e => setApiKeyInput(e.target.value)}
+                  style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc', marginBottom: 12 }}
+                  placeholder="sk-..."
+                  autoFocus
+                />
+                <button type="submit" style={{ padding: '8px 16px', borderRadius: 4, background: '#4285F4', color: '#fff', border: 'none', fontWeight: 600 }}>
+                  Save & Continue
+                </button>
+              </form>
+            ) : (
+              <div>
+                <div style={{ marginBottom: 12, color: '#333', fontSize: 16 }}>
+                  <span style={{ fontWeight: 500 }}>Question:</span> {currentQuestion?.question}
+                </div>
+                <div style={{ minHeight: 48, marginBottom: 12 }}>
+                  {geminiLoading && <span>Loading explanation...</span>}
+                  {geminiError && <span style={{ color: 'red' }}>{geminiError}</span>}
+                  <div style={{
+                    background: '#f5f7fa',
+                    color: '#222',
+                    borderRadius: 6,
+                    padding: '12px 14px',
+                    minHeight: 32,
+                    fontSize: 15,
+                    border: '1px solid #e0e0e0',
+                    marginTop: 4,
+                    whiteSpace: 'pre-line',
+                  }}>
+                    {geminiResponse?.trim()
+                      ? renderGeminiResponse(geminiResponse)
+                      : (!geminiLoading && !geminiError && 'No explanation available.')}
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleGeminiExplain()}
+                  style={{ padding: '8px 16px', borderRadius: 4, background: '#4285F4', color: '#fff', border: 'none', fontWeight: 600, marginRight: 8 }}
+                  disabled={geminiLoading}
+                >
+                  Re-Explain
+                </button>
+                <button
+                  onClick={handleCloseGeminiDialog}
+                  style={{ padding: '8px 16px', borderRadius: 4, background: '#eee', color: '#333', border: 'none', fontWeight: 600 }}
+                >
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Back Button - Outside the quiz container (Desktop only) */}
       {!isMobile && (
         <div className="back-button-outer">
@@ -397,3 +615,24 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
 }
 
 export default Quiz;
+
+function renderGeminiResponse(text) {
+  // Replace **bold** with <b>bold</b>, but only for text that starts and ends with **
+  // Use regex to match **...**
+  const parts = [];
+  let lastIndex = 0;
+  const regex = /\*\*([^*]+)\*\*/g;
+  let match;
+  let key = 0;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push(<b key={key++}>{match[1]}</b>);
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
+}
