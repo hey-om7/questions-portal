@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-// Gemini logo SVG (simple placeholder, replace with your own if needed)
+// Gemini logo using the SVG from public/images/gemini-icon.svg
 const GeminiLogo = () => (
-  <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="16" cy="16" r="16" fill="#4285F4"/>
-    <circle cx="16" cy="16" r="10" fill="#fff"/>
-    <circle cx="16" cy="16" r="6" fill="#4285F4"/>
-  </svg>
+  <img src="/images/gemini-icon.svg" alt="Gemini Logo" width={28} height={28} style={{ display: 'block' }} />
 );
 
 function shuffleArrayWithMapping(array) {
@@ -413,7 +409,7 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
             left: 0,
             width: '100vw',
             height: '100vh',
-            background: 'rgba(0,0,0,0.35)',
+            background: 'rgba(15, 15, 35, 0.85)',
             zIndex: 2000,
             display: 'flex',
             alignItems: 'center',
@@ -423,69 +419,168 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
         >
           <div
             style={{
-              background: '#fff',
-              borderRadius: 12,
-              padding: 24,
-              minWidth: 320,
-              maxWidth: 480,
-              boxShadow: '0 4px 24px rgba(0,0,0,0.18)',
+              background: 'linear-gradient(135deg, #18182f 0%, #23234a 100%)',
+              borderRadius: 18,
+              padding: 32,
+              minWidth: 340,
+              maxWidth: 500,
+              boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
               position: 'relative',
+              border: '1.5px solid #23234a',
             }}
             onClick={e => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 18 }}>
               <GeminiLogo />
-              <span style={{ fontWeight: 600, fontSize: 20, marginLeft: 12 }}>Gemini Explain</span>
+              <span style={{ fontWeight: 700, fontSize: 22, marginLeft: 14, color: '#64ffda', letterSpacing: 1 }}>Gemini Explain</span>
             </div>
             {awaitingApiKey ? (
-              <form onSubmit={handleApiKeySubmit}>
-                <label style={{ fontWeight: 500, marginBottom: 8, display: 'block' }}>Enter Gemini API Key:</label>
-                <input
-                  type="password"
-                  value={apiKeyInput}
-                  onChange={e => setApiKeyInput(e.target.value)}
-                  style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc', marginBottom: 12 }}
-                  placeholder="sk-..."
-                  autoFocus
-                />
-                <button type="submit" style={{ padding: '8px 16px', borderRadius: 4, background: '#4285F4', color: '#fff', border: 'none', fontWeight: 600 }}>
-                  Save & Continue
-                </button>
+              <form onSubmit={handleApiKeySubmit} style={{ display: 'flex', flexDirection: 'column', height: 220, justifyContent: 'space-between' }}>
+                <div>
+                  <label style={{ fontWeight: 500, marginBottom: 8, display: 'block', color: '#64ffda', fontSize: 15 }}>Enter Gemini API Key:</label>
+                  <div style={{ fontSize: 14, color: '#b0b0c3', marginBottom: 10 }}>
+                    Please enter your Gemini API token. You can obtain one from the Gemini API documentation page.
+                  </div>
+                  <input
+                    type="password"
+                    value={apiKeyInput}
+                    onChange={e => setApiKeyInput(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: 10,
+                      borderRadius: 6,
+                      border: '1.5px solid #23234a',
+                      marginBottom: 16,
+                      background: '#23234a',
+                      color: '#fff',
+                      fontSize: 15,
+                    }}
+                    placeholder="Enter API Key"
+                    autoFocus
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'row', gap: 12, justifyContent: 'flex-end', marginTop: 12 }}>
+                  <button
+                    type="button"
+                    style={{
+                      padding: '10px 24px',
+                      borderRadius: 8,
+                      background: 'transparent',
+                      color: '#64ffda',
+                      border: '2px solid',
+                      borderImage: 'linear-gradient(135deg, #64ffda, #00d4ff) 1',
+                      fontWeight: 700,
+                      fontSize: 16,
+                      letterSpacing: 0.5,
+                      boxShadow: '0 2px 8px rgba(100,255,218,0.08)',
+                      transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
+                      cursor: 'pointer',
+                      height: 48,
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                    onMouseOver={e => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #23234a 0%, #18182f 100%)';
+                      e.currentTarget.style.color = '#00d4ff';
+                    }}
+                    onMouseOut={e => {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.color = '#64ffda';
+                    }}
+                    onClick={() => window.open('https://aistudio.google.com/app/apikey', '_blank', 'noopener noreferrer')}
+                  >
+                    Get API Key
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      style={{ marginLeft: 6, display: 'inline-block', verticalAlign: 'middle' }}
+                    >
+                      <path d="M7 13L17 3M17 3H10M17 3V10" stroke="#64ffda" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <button
+                    type="submit"
+                    style={{
+                      padding: '10px 24px',
+                      borderRadius: 8,
+                      background: 'linear-gradient(135deg, #64ffda, #00d4ff)',
+                      color: '#18182f',
+                      border: 'none',
+                      fontWeight: 700,
+                      fontSize: 16,
+                      letterSpacing: 0.5,
+                      boxShadow: '0 2px 12px rgba(100,255,218,0.18)',
+                      transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
+                      cursor: 'pointer',
+                      height: 48,
+                    }}
+                    onMouseOver={e => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #00d4ff, #64ffda)';
+                      e.currentTarget.style.color = '#18182f';
+                    }}
+                    onMouseOut={e => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #64ffda, #00d4ff)';
+                      e.currentTarget.style.color = '#18182f';
+                    }}
+                  >
+                    Save
+                  </button>
+                </div>
               </form>
             ) : (
               <div>
-                <div style={{ marginBottom: 12, color: '#333', fontSize: 16 }}>
-                  <span style={{ fontWeight: 500 }}>Question:</span> {currentQuestion?.question}
+                <div style={{ marginBottom: 12, color: '#b0b0c3', fontSize: 16 }}>
+                  <span style={{ fontWeight: 500, color: '#64ffda' }}>Question:</span> {currentQuestion?.question}
                 </div>
-                <div style={{ minHeight: 48, marginBottom: 12 }}>
-                  {geminiLoading && <span>Loading explanation...</span>}
-                  {geminiError && <span style={{ color: 'red' }}>{geminiError}</span>}
-                  <div style={{
-                    background: '#f5f7fa',
-                    color: '#222',
-                    borderRadius: 6,
-                    padding: '12px 14px',
-                    minHeight: 32,
-                    fontSize: 15,
-                    border: '1px solid #e0e0e0',
-                    marginTop: 4,
-                    whiteSpace: 'pre-line',
-                  }}>
-                    {geminiResponse?.trim()
-                      ? renderGeminiResponse(geminiResponse)
-                      : (!geminiLoading && !geminiError && 'No explanation available.')}
-                  </div>
+                <div style={{
+                  background: 'rgba(100,255,218,0.07)',
+                  color: '#fff',
+                  borderRadius: 8,
+                  padding: '14px 16px',
+                  minHeight: 32,
+                  fontSize: 16,
+                  border: '1.5px solid #23234a',
+                  marginTop: 4,
+                  whiteSpace: 'pre-line',
+                }}>
+                  {geminiResponse?.trim()
+                    ? renderGeminiResponse(geminiResponse)
+                    : (!geminiLoading && !geminiError && 'No explanation available.')}
                 </div>
                 <button
                   onClick={() => handleGeminiExplain()}
-                  style={{ padding: '8px 16px', borderRadius: 4, background: '#4285F4', color: '#fff', border: 'none', fontWeight: 600, marginRight: 8 }}
+                 style={{
+                   padding: '10px 20px',
+                   borderRadius: 6,
+                   background: 'linear-gradient(135deg, #64ffda, #00d4ff)',
+                   color: '#18182f',
+                   border: 'none',
+                   fontWeight: 700,
+                   fontSize: 16,
+                   marginRight: 10,
+                   marginTop: 16,
+                   letterSpacing: 0.5,
+                 }}
                   disabled={geminiLoading}
                 >
                   Re-Explain
                 </button>
                 <button
                   onClick={handleCloseGeminiDialog}
-                  style={{ padding: '8px 16px', borderRadius: 4, background: '#eee', color: '#333', border: 'none', fontWeight: 600 }}
+                 style={{
+                   padding: '10px 20px',
+                   borderRadius: 6,
+                   background: 'rgba(255,255,255,0.08)',
+                   color: '#fff',
+                   border: '1.5px solid #23234a',
+                   fontWeight: 700,
+                   fontSize: 16,
+                   marginTop: 16,
+                   letterSpacing: 0.5,
+                 }}
                 >
                   Close
                 </button>
