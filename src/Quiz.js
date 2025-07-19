@@ -486,7 +486,7 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
             left: bubblePos.left !== null ? bubblePos.left : 'auto',
             right: bubblePos.right !== null ? bubblePos.right : 'auto',
             zIndex: 1000,
-            cursor: dragging ? 'grabbing' : 'grab',
+            cursor: dragging ? 'grabbing' : 'pointer', // changed to pointer when not dragging
             width: 48,
             height: 48,
             borderRadius: '50%',
@@ -495,15 +495,18 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            transition: dragging ? 'none' : 'box-shadow 0.2s',
+            transition: dragging ? 'none' : 'box-shadow 0.2s, transform 0.18s cubic-bezier(0.4,0.2,0.2,1)', // add transform transition
             opacity: dragging ? 0.85 : 1,
             userSelect: 'none',
             touchAction: 'none', // Prevent background scroll/gestures on mobile
+            ...(bubblePos.isHovered ? { transform: 'scale(1.08)' } : {}), // scale if hovered
           }}
           title="Ask Gemini to explain this question"
           onClick={handleBubbleClick}
           onMouseDown={handleBubbleMouseDown}
           onTouchStart={handleBubbleMouseDown}
+          onMouseEnter={() => setBubblePos(pos => ({ ...pos, isHovered: true }))}
+          onMouseLeave={() => setBubblePos(pos => ({ ...pos, isHovered: false }))}
         >
           <GeminiLogo />
         </div>
