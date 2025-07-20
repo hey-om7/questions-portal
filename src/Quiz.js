@@ -25,6 +25,8 @@ function isValidArray(arr, len) {
 function Quiz({ certificationId, filepath, onBackToLanding }) {
   // LocalStorage key (namespace by certificationId if present)
   const storageKey = certificationId ? `quizState_${certificationId}` : 'quizState';
+  const distractionKey = certificationId ? `distractionCount_${certificationId}` : 'distractionCount';
+  const proctoredKey = certificationId ? `proctored_${certificationId}` : null;
 
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -56,6 +58,17 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
 
   // Helper for spinner gradient
   const spinnerGradientId = 'gemini-spinner-gradient';
+
+  // Distraction detection state
+  const [distractionCount, setDistractionCount] = useState(() => {
+    const saved = localStorage.getItem(distractionKey);
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [showDistractionDialog, setShowDistractionDialog] = useState(false);
+  const [isProctored, setIsProctored] = useState(() => {
+    if (!proctoredKey) return false;
+    return localStorage.getItem(proctoredKey) === '1';
+  });
 
   // Restore state from localStorage on mount (after questions are loaded)
   useEffect(() => {
@@ -149,6 +162,42 @@ function Quiz({ certificationId, filepath, onBackToLanding }) {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Distraction detection logic (only if proctored)
+  useEffect(() => {
+    if (!isProctored) return;
+    function handleDistraction() {
+      setDistractionCount(prev => {
+        const next = prev + 1;
+        localStorage.setItem(distractionKey, next);
+        if (next === 1 || next === 2) {
+          toast.warn(`Distraction detected! (${next}/3). Exceeding the limit will end the test.`, { autoClose: 3000 });
+        }
+        if (next >= 3) {
+          // Mark for dialog on landing, clear quiz state, and exit
+          localStorage.setItem('showDistractionDialog', '1');
+          localStorage.removeItem(storageKey);
+          setTimeout(() => {
+            onBackToLanding();
+          }, 500); // Give time for toast
+        }
+        return next;
+      });
+    }
+    // Listen for tab/window blur or visibility change
+    function onBlur(e) {
+      if (document.visibilityState === 'hidden' || document.hidden) {
+        console.log('onBlur handler triggered by:', e?.type);
+        handleDistraction();
+      }
+    }
+    window.addEventListener('blur', onBlur);
+    document.addEventListener('visibilitychange', onBlur);
+    return () => {
+      window.removeEventListener('blur', onBlur);
+      document.removeEventListener('visibilitychange', onBlur);
+    };
+  }, [onBackToLanding, storageKey, distractionKey, isProctored]);
 
   // Handle drag start
   const handleBubbleMouseDown = (e) => {

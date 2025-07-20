@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './LandingPage.css';
 
 function LandingPage({ onStartQuiz , onStartQuizWithFilepath}) {
@@ -6,6 +6,20 @@ function LandingPage({ onStartQuiz , onStartQuizWithFilepath}) {
   const [selectedCert, setSelectedCert] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const mainContentRef = useRef(null);
+  const [showDistractionDialog, setShowDistractionDialog] = useState(false);
+  const [showProctorDialog, setShowProctorDialog] = useState(false);
+  const [pendingCert, setPendingCert] = useState(null);
+
+  useEffect(() => {
+    if (localStorage.getItem('showDistractionDialog')) {
+      setShowDistractionDialog(true);
+      localStorage.removeItem('showDistractionDialog');
+      // Optionally clear distraction count for all certs
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('distractionCount_')) localStorage.removeItem(key);
+      });
+    }
+  }, []);
 
   const certifications = [
     {
@@ -92,12 +106,25 @@ function LandingPage({ onStartQuiz , onStartQuizWithFilepath}) {
 
   const handleCertificationClick = (cert) => {
     if (cert.available) {
-      // Clear quiz cache for this certification before starting
-      localStorage.removeItem('quizState_' + cert.id);
-      onStartQuiz(cert.id, cert.filepath); 
+      // Reset distraction count for this certification
+      localStorage.setItem('distractionCount_' + cert.id, '0');
+      setPendingCert(cert);
+      setShowProctorDialog(true);
     } else {
       setSelectedCert(cert);
       setShowComingSoon(true);
+    }
+  };
+
+  const handleProctorChoice = (isProctored) => {
+    setShowProctorDialog(false);
+    if (pendingCert) {
+      // Store proctor mode in localStorage for Quiz.js to read
+      localStorage.setItem('proctored_' + pendingCert.id, isProctored ? '1' : '0');
+      // Clear quiz cache for this certification before starting
+      localStorage.removeItem('quizState_' + pendingCert.id);
+      onStartQuiz(pendingCert.id, pendingCert.filepath);
+      setPendingCert(null);
     }
   };
 
@@ -114,6 +141,126 @@ function LandingPage({ onStartQuiz , onStartQuizWithFilepath}) {
 
   return (
     <div className="landing-page">
+      {showDistractionDialog && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          background: 'rgba(15, 15, 35, 0.85)',
+          zIndex: 3000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #18182f 0%, #23234a 100%)',
+            borderRadius: 18,
+            padding: 32,
+            minWidth: 340,
+            maxWidth: 500,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
+            position: 'relative',
+            border: '1.5px solid #23234a',
+            color: '#fff',
+            textAlign: 'center',
+          }}>
+            <h2 style={{ color: '#ff6b6b', marginBottom: 16 }}>Distraction Detected</h2>
+            <p style={{ fontSize: 18, marginBottom: 18 }}>
+              You have exceeded the allowed number of distractions.<br/>
+              We have caught you leaving the test page more than 3 times.<br/>
+              For exam integrity, the test has been terminated.
+            </p>
+            <button
+              style={{
+                padding: '10px 24px',
+                borderRadius: 8,
+                background: 'linear-gradient(135deg, #64ffda, #00d4ff)',
+                color: '#18182f',
+                border: 'none',
+                fontWeight: 700,
+                fontSize: 16,
+                letterSpacing: 0.5,
+                boxShadow: '0 2px 12px rgba(100,255,218,0.18)',
+                marginTop: 10,
+                cursor: 'pointer',
+              }}
+              onClick={() => setShowDistractionDialog(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {showProctorDialog && pendingCert && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          background: 'rgba(15, 15, 35, 0.85)',
+          zIndex: 4000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #18182f 0%, #23234a 100%)',
+            borderRadius: 18,
+            padding: 32,
+            minWidth: 340,
+            maxWidth: 500,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
+            position: 'relative',
+            border: '1.5px solid #23234a',
+            color: '#fff',
+            textAlign: 'center',
+          }}>
+            <h2 style={{ color: '#64ffda', marginBottom: 16 }}>Choose Test Mode</h2>
+            <p style={{ fontSize: 18, marginBottom: 18 }}>
+            Would you like to take the <b>{pendingCert.name}</b> Test in <b>Proctored Mode</b> (with distraction monitoring enabled) or in <b>Standard Mode</b>?
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 18, marginBottom: 18 }}>
+              <button
+                style={{
+                  padding: '10px 24px',
+                  borderRadius: 8,
+                  background: 'linear-gradient(135deg, #64ffda, #00d4ff)',
+                  color: '#18182f',
+                  border: 'none',
+                  fontWeight: 700,
+                  fontSize: 16,
+                  letterSpacing: 0.5,
+                  boxShadow: '0 2px 12px rgba(100,255,218,0.18)',
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleProctorChoice(true)}
+              >
+                Proctored
+              </button>
+              <button
+                style={{
+                  padding: '10px 24px',
+                  borderRadius: 8,
+                  background: 'rgba(255,255,255,0.08)',
+                  color: '#fff',
+                  border: '1.5px solid #23234a',
+                  fontWeight: 700,
+                  fontSize: 16,
+                  letterSpacing: 0.5,
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleProctorChoice(false)}
+              >
+                Standard
+              </button>
+            </div>
+            
+          </div>
+        </div>
+      )}
       <div className="split-layout-wrapper">
         <div className="split-layout">
           {/* Left Section: Logo and App Name */}
